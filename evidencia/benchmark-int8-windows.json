@@ -1,0 +1,49 @@
+{
+  "split": "val",
+  "calibration_split": "train",
+  "calibration_images": 128,
+  "model_sha256": "0269cdc030412fbc0ca55592c5fd3d91bad56ff01058fefec1a7f4a1ead0b203",
+  "cpu": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+  "fp32": {
+    "model_bytes": 6089244,
+    "startup_ms": 19.81269999998858,
+    "p50_ms": 0.6287500000325963,
+    "p95_ms": 0.708025000062662,
+    "samples": 360,
+    "rss_after_mib": 106.6640625,
+    "rss_delta_mib": 13.71875,
+    "accuracy": 1.0,
+    "macro_f1": 1.0,
+    "confusion_np_p": [
+      [
+        35,
+        0
+      ],
+      [
+        0,
+        37
+      ]
+    ]
+  },
+  "int8": {
+    "model_bytes": 1852206,
+    "startup_ms": 69.99369999994087,
+    "p50_ms": 0.9661000000278364,
+    "p95_ms": 1.1416549999864858,
+    "samples": 360,
+    "rss_after_mib": 106.58984375,
+    "rss_delta_mib": 13.984375,
+    "accuracy": 0.5,
+    "macro_f1": 0.49961389961389957,
+    "confusion_np_p": [
+      [
+        19,
+        16
+      ],
+      [
+        20,
+        17
+      ]
+    ]
+  }
+}
