@@ -1,0 +1,6 @@
+*.pdf binary
+*.png binary
+*.jpg binary
+*.onnx binary
+*.zip binary
+*.db binary
