@@ -1,0 +1,85 @@
+{
+  "total_count": 4,
+  "artifacts": [
+    {
+      "id": 14418616976,
+      "node_id": "MDg6QXJ0aWZhY3QxNDQxODYxNjk3Ng==",
+      "name": "eva4-image",
+      "size_in_bytes": 110413514,
+      "url": "https://api.github.com/repos/Rhaguer/HAMBEE/actions/artifacts/14418616976",
+      "archive_download_url": "https://api.github.com/repos/Rhaguer/HAMBEE/actions/artifacts/14418616976/zip",
+      "expired": false,
+      "digest": "sha256:b5132df0ec954f64a40e0d378f00da4625315dc1526379eec11fccce01f4aa43",
+      "created_at": "2026-11-18T10:19:57Z",
+      "updated_at": "2026-11-18T10:19:57Z",
+      "expires_at": "2027-02-16T10:18:39Z",
+      "workflow_run": {
+        "id": 44284173203,
+        "repository_id": 1462114976,
+        "head_repository_id": 1462114976,
+        "head_branch": "v1.2.0",
+        "head_sha": "9a6237ff3888ce631e7b0e71e232a1cfafbc9d72"
+      }
+    },
+    {
+      "id": 14418198186,
+      "node_id": "MDg6QXJ0aWZhY3QxNDQxODE5ODE4Ng==",
+      "name": "evidencia-eva4",
+      "size_in_bytes": 19762,
+      "url": "https://api.github.com/repos/Rhaguer/HAMBEE/actions/artifacts/14418198186",
+      "archive_download_url": "https://api.github.com/repos/Rhaguer/HAMBEE/actions/artifacts/14418198186/zip",
+      "expired": false,
+      "digest": "sha256:3a9b5cbd882c099c55568fa2cec31a3078f9e883aaec0e058d67ccd84495eca9",
+      "created_at": "2026-11-18T10:19:50Z",
+      "updated_at": "2026-11-18T10:19:50Z",
+      "expires_at": "2027-02-16T10:18:39Z",
+      "workflow_run": {
+        "id": 44284173203,
+        "repository_id": 1462114976,
+        "head_repository_id": 1462114976,
+        "head_branch": "v1.2.0",
+        "head_sha": "9a6237ff3888ce631e7b0e71e232a1cfafbc9d72"
+      }
+    },
+    {
+      "id": 14418057685,
+      "node_id": "MDg6QXJ0aWZhY3QxNDQxODA1NzY4NQ==",
+      "name": "evidencia-despliegue-eva4",
+      "size_in_bytes": 1347,
+      "url": "https://api.github.com/repos/Rhaguer/HAMBEE/actions/artifacts/14418057685",
+      "archive_download_url": "https://api.github.com/repos/Rhaguer/HAMBEE/actions/artifacts/14418057685/zip",
+      "expired": false,
+      "digest": "sha256:2fe28aaaa94ae8db2e7ce7ec491f1e68c41d420ac59d9582b4c300a8555055a9",
+      "created_at": "2026-11-18T10:21:10Z",
+      "updated_at": "2026-11-18T10:21:10Z",
+      "expires_at": "2027-02-16T10:18:39Z",
+      "workflow_run": {
+        "id": 44284173203,
+        "repository_id": 1462114976,
+        "head_repository_id": 1462114976,
+        "head_branch": "v1.2.0",
+        "head_sha": "9a6237ff3888ce631e7b0e71e232a1cfafbc9d72"
+      }
+    },
+    {
+      "id": 14417868927,
+      "node_id": "MDg6QXJ0aWZhY3QxNDQxNzg2ODkyNw==",
+      "name": "evidencia-mlops",
+      "size_in_bytes": 5707637,
+      "url": "https://api.github.com/repos/Rhaguer/HAMBEE/actions/artifacts/14417868927",
+      "archive_download_url": "https://api.github.com/repos/Rhaguer/HAMBEE/actions/artifacts/14417868927/zip",
+      "expired": false,
+      "digest": "sha256:9cb0ce08145d7f4e97a31c19e06d449f5a92feb99cf9dbc5c5c4d7739d3f7852",
+      "created_at": "2026-11-18T10:19:48Z",
+      "updated_at": "2026-11-18T10:19:48Z",
+      "expires_at": "2027-02-16T10:18:39Z",
+      "workflow_run": {
+        "id": 44284173203,
+        "repository_id": 1462114976,
+        "head_repository_id": 1462114976,
+        "head_branch": "v1.2.0",
+        "head_sha": "9a6237ff3888ce631e7b0e71e232a1cfafbc9d72"
+      }
+    }
+  ]
+}

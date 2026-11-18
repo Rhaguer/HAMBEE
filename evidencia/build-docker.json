@@ -1,8 +1,10 @@
 {
-  "result": "built",
-  "docker_engine": "28.5.2",
+  "result": "built_and_http_validated",
+  "docker_engine": "29.4.2",
   "docker_image": "hambee:1.2.0",
-  "docker_image_id": "sha256:7a75fa4787b651acdabafbfb80323bf8d6e05b1cecbbaff3bcfbc68cfe49e871",
+  "docker_image_id": "sha256:b04f0835b8c99a0416230319e3127e674b5951da146f468e1c3a15da35f74ed0",
   "dockerfile_sha256": "4bc102f01b41e3f428d1a4f87459298882bb9feeceda61b2c1a0315c4a8ca82e",
-  "environment": "Linux x86_64 virtualizado con QEMU TCG"
+  "environment": "linux/amd64",
+  "github_run": "https://github.com/Rhaguer/HAMBEE/actions/runs/44284173203",
+  "github_commit": "9a6237ff3888ce631e7b0e71e232a1cfafbc9d72"
 }

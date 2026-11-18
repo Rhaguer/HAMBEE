@@ -1,0 +1,48 @@
+{
+  "platform": "Linux-7.0.0-1019-azure-x86_64-with-glibc2.43",
+  "cpu": "AMD EPYC 7763 64-Core Processor",
+  "ort": "1.31.1",
+  "model_bytes": 6089244,
+  "model_sha256": "0269cdc030412fbc0ca55592c5fd3d91bad56ff01058fefec1a7f4a1ead0b203",
+  "sin_optimizacion": {
+    "startup_ms": 18.259742999994444,
+    "p50_ms": 3.1559110000003443,
+    "p95_ms": 3.3485699999978635,
+    "samples": 355,
+    "rss_after_mib": 126.4375,
+    "rss_delta_mib": 16.75390625,
+    "accuracy": 0.9436619718309859,
+    "macro_f1": 0.9436507936507936,
+    "confusion_np_p": [
+      [
+        34,
+        0
+      ],
+      [
+        4,
+        33
+      ]
+    ]
+  },
+  "optimizado": {
+    "startup_ms": 24.17379100000261,
+    "p50_ms": 0.8263229999982968,
+    "p95_ms": 0.8615133000013486,
+    "samples": 355,
+    "rss_after_mib": 130.42578125,
+    "rss_delta_mib": 20.74609375,
+    "accuracy": 0.9436619718309859,
+    "macro_f1": 0.9436507936507936,
+    "confusion_np_p": [
+      [
+        34,
+        0
+      ],
+      [
+        4,
+        33
+      ]
+    ]
+  },
+  "identical_predictions": true
+}

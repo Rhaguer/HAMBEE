@@ -1,0 +1,44 @@
+{
+  "platform": "Linux-7.0.0-1019-azure-x86_64-with-glibc2.43",
+  "model_sha256": "0269cdc030412fbc0ca55592c5fd3d91bad56ff01058fefec1a7f4a1ead0b203",
+  "images": 71,
+  "repeats": 3,
+  "identical_predictions": true,
+  "batch_metrics": [
+    {
+      "batch_size": 1,
+      "full_batch_samples": 213,
+      "p50_full_batch_ms": 0.8315520000010679,
+      "p95_full_batch_ms": 0.8521893999983376,
+      "images_per_second": 1200.1215266723727
+    },
+    {
+      "batch_size": 2,
+      "full_batch_samples": 105,
+      "p50_full_batch_ms": 1.523263000002828,
+      "p95_full_batch_ms": 1.5690328000005138,
+      "images_per_second": 1304.0518230928567
+    },
+    {
+      "batch_size": 4,
+      "full_batch_samples": 51,
+      "p50_full_batch_ms": 2.940385999998796,
+      "p95_full_batch_ms": 3.112303500003577,
+      "images_per_second": 1343.0210422267135
+    },
+    {
+      "batch_size": 8,
+      "full_batch_samples": 24,
+      "p50_full_batch_ms": 5.917745999997948,
+      "p95_full_batch_ms": 6.286244400004648,
+      "images_per_second": 1330.016085888885
+    },
+    {
+      "batch_size": 16,
+      "full_batch_samples": 12,
+      "p50_full_batch_ms": 11.555145999999183,
+      "p95_full_batch_ms": 12.191120899996832,
+      "images_per_second": 1364.7900480998264
+    }
+  ]
+}

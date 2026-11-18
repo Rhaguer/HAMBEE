@@ -2,6 +2,8 @@
 
 Repositorio de entrega: https://github.com/Rhaguer/HAMBEE. El informe vigente se encuentra en `docs/EVA4_Informe_Haguer_Maldonado.pdf`; la guía de defensa y la matriz de la pauta están en `docs/DEFENSA_EVA4.md`.
 
+**Liberación verificada:** [v1.2.0](https://github.com/Rhaguer/HAMBEE/releases/tag/v1.2.0). La [ejecución de liberación](https://github.com/Rhaguer/HAMBEE/actions/runs/44284173203) aprobó `validate` y `deploy`, incluyendo Docker por HTTP y MLflow. Los resultados reales están en `evidencia/ci-liberacion/` y `evidencia/liberacion.json`. El lanzador también se probó en Windows desde un entorno virtual nuevo (`evidencia/api-lanzador-windows.json`).
+
 Clasificador de abejas con polen (P) y sin polen (NP), MobileNetV3-Small v1.2.0, época 33 de 40. El ZIP de datos tiene 714 JPEG originales y su manifiesto. Las particiones por grupo de origen tienen 571 imágenes de entrenamiento, 72 de validación y 71 de prueba.
 
 ## Demostración local
@@ -91,3 +93,7 @@ El JSON `registro-mlflow.json` permite revisar el identificador y las métricas 
 ### Alcance del despliegue
 
 La liberación automatizada se despliega y prueba en un runner Linux independiente. Es un entorno de aceptación efímero: finaliza al terminar el job. Para una demostración persistente en el equipo de defensa, ejecuta el lanzador local o `docker run`. No se requiere una nube pública para esta evaluación.
+
+La versión de código de la imagen liberada es `9a6237ff3888ce631e7b0e71e232a1cfafbc9d72`. El informe y las evidencias descargadas se incorporaron posteriormente a `main`, conservando el mismo código del servicio, modelo y dataset. La imagen ya construida se distribuye como `HAMBEE_1.2.0_Docker.zip` en la liberación; contiene el archivo de imagen y su SHA-256. Verifica la huella y ejecuta `docker load --input eva4-image.tar.gz` antes de `docker run`.
+
+Para regenerar el informe, instala `docs/requirements-informe.txt` y ejecuta `python docs/generar_informe.py`. El PDF usa los datos archivados de la liberación y su fuente textual queda en Markdown.

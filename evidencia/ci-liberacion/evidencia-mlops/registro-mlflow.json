@@ -1,0 +1,22 @@
+{
+  "run_id": "4e6e1ebff39641dc8f5fbadfc361ca2d",
+  "experiment": "HAMBEE-EVA4",
+  "status": "FINISHED",
+  "git_commit": "9a6237ff3888ce631e7b0e71e232a1cfafbc9d72",
+  "model_sha256": "0269cdc030412fbc0ca55592c5fd3d91bad56ff01058fefec1a7f4a1ead0b203",
+  "dataset_manifest_sha256": "b47431a5f1a82093081e9bc2a23e049c94e0192ba7f7ce430fda391752b91a83",
+  "metrics": {
+    "test_accuracy": 0.9436619718309859,
+    "test_macro_f1": 0.9436507936507936,
+    "runtime_p95_ms": 0.8615133000013486,
+    "runtime_rss_mib": 130.42578125,
+    "http_p95_ms": 4.521545800010784,
+    "model_bytes": 6089244.0,
+    "historical_train_loss": 0.0053562535477028736,
+    "historical_val_loss": 0.3842490613460541,
+    "historical_val_accuracy": 0.9444444179534912
+  },
+  "checked_at_utc": "2026-11-18T10:19:45.896583+00:00",
+  "github_run": "https://github.com/Rhaguer/HAMBEE/actions/runs/44284173203",
+  "tracking_backend": "SQLite; descargar evidencia-mlops para inspección local"
+}

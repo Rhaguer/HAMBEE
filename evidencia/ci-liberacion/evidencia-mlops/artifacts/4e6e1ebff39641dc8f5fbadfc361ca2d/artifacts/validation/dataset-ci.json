@@ -1,0 +1,17 @@
+{
+  "model_version": "1.2.0",
+  "model_sha256": "0269cdc030412fbc0ca55592c5fd3d91bad56ff01058fefec1a7f4a1ead0b203",
+  "dataset_manifest_sha256": "b47431a5f1a82093081e9bc2a23e049c94e0192ba7f7ce430fda391752b91a83",
+  "images_verified": 714,
+  "counts": {
+    "train": 571,
+    "test": 71,
+    "val": 72
+  },
+  "groups": {
+    "train": 319,
+    "val": 40,
+    "test": 40
+  },
+  "overlapping_origin_groups": 0
+}

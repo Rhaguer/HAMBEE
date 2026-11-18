@@ -13,9 +13,9 @@
       "P": 0.9999959468841553
     },
     "model_version": "1.2.0",
-    "inference_ms": 1.2471860000005108
+    "inference_ms": 1.246541999996964
   },
-  "request_ms": 17.454903999919225,
+  "request_ms": 11.699566999993749,
   "validated_status_codes": [
     200,
     413,
@@ -61,11 +61,11 @@
           "predicted": "NP"
         }
       ],
-      "elapsed_seconds": 0.16228420400000232
+      "elapsed_seconds": 0.1573600409999969
     },
     "full": {
       "runtime": "ONNX Runtime 1.31.1 / CPUExecutionProvider",
-      "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+      "platform": "Linux-7.0.0-1019-azure-x86_64-with-glibc2.43",
       "model_version": "1.2.0",
       "model_sha256": "0269cdc030412fbc0ca55592c5fd3d91bad56ff01058fefec1a7f4a1ead0b203",
       "dataset_manifest_sha256": "b47431a5f1a82093081e9bc2a23e049c94e0192ba7f7ce430fda391752b91a83",
@@ -77,10 +77,10 @@
       },
       "batch_size": 8,
       "full_batches": 89,
-      "p95_full_batch_inference_ms": 6.899403200009145,
-      "model_execution_seconds": 0.5018318460001865,
-      "processing_seconds": 1.417022535000001,
-      "processing_images_per_second": 503.87342640249506,
+      "p95_full_batch_inference_ms": 6.354267199996855,
+      "model_execution_seconds": 0.5520210899999682,
+      "processing_seconds": 1.4396108440000006,
+      "processing_images_per_second": 495.96736713661466,
       "test": {
         "images": 71,
         "correct": 67,
