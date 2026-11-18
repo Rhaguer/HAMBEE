@@ -1,16 +1,28 @@
-# HAMBEE | Implementación y optimización
+# HAMBEE
+
+Implementación y optimización de un clasificador de abejas con y sin polen
+
+Evaluación Sumativa N.º 4 · Machine Learning
+
+Unidad 4 · Implementación de modelos Deep Learning
+
+Carrera: Ingeniería en Informática
+
+Sección: TIEL26 · 101-8V
+
+Asignatura: Machine Learning
+
+Autores: Ricardo Haguer y Yerko Maldonado
+
+Docente: Francisco Valdivieso Tapia
+
+Sede: INACAP Puente Alto
+
+Fecha de esta versión: 18 de noviembre de 2026
+
+# Resumen ejecutivo
 
 Informe técnico defensivo - Evaluación Sumativa N.º 4 de Machine Learning
-
-| Identificación | Datos |
-| --- | --- |
-| Autores | Ricardo Haguer y Yerko Maldonado |
-| Carrera / sede | Ingeniería en Informática / INACAP Puente Alto |
-| Asignatura / sección | Machine Learning, TIEL26 / 101-8V |
-| Docente | Francisco Valdivieso Tapia |
-| Fecha / modelo | 18 de noviembre de 2026 / HAMBEE 1.2.0 |
-
-## Resumen ejecutivo
 
 Se implementó un servicio local de clasificación de abejas con polen (P) y sin polen (NP), basado en MobileNetV3-Small exportado a ONNX. FastAPI expone inferencia y un panel de demostración. El contenedor se construyó, se probó por HTTP y se liberó mediante un pipeline que conserva evidencia y registra los artefactos en MLflow.
 
@@ -150,13 +162,25 @@ El modelo y el conjunto de datos son pequeños y quedan preservados en Git. MLfl
 
 ## Evidencia ejecutada
 
-Pipeline de liberación: https://github.com/Rhaguer/HAMBEE/actions/runs/44284173203
+[Pipeline de liberación aprobado](https://github.com/Rhaguer/HAMBEE/actions/runs/44284173203)
 
 Commit liberado: 9a6237ff3888ce631e7b0e71e232a1cfafbc9d72
 
 Registro MLflow: 4e6e1ebff39641dc8f5fbadfc361ca2d | estado: FINISHED
 
 Se conservan evidencia-eva4, evidencia-mlops, eva4-image y evidencia-despliegue-eva4. El despliegue de aceptación es efímero y no equivale a un servicio público permanente. El backend SQLite permite inspeccionar parámetros y métricas; los artefactos conservan también los archivos originales en la descarga.
+
+# Evidencia visual de la liberación
+
+[1. Repositorio del proyecto](https://github.com/Rhaguer/HAMBEE)
+
+[2. Versión v1.2.0 y archivos de entrega](https://github.com/Rhaguer/HAMBEE/releases/tag/v1.2.0)
+
+[3. Pipeline de liberación aprobado](https://github.com/Rhaguer/HAMBEE/actions/runs/44284173203)
+
+Figura 3. Captura de GitHub de la ejecución 44284173203. Fuente: página pública de GitHub Actions; captura realizada el 18 de noviembre de 2026.
+
+![Pipeline aprobado](figuras/pipeline-v1.2.0-aprobado.jpg)
 
 # 7. API y contenedor probados
 
@@ -213,8 +237,9 @@ Colab ofrece una demostración complementaria en CPU utilizando el mismo ONNX. N
 
 ## Artefactos de la entrega
 
-Repositorio: https://github.com/Rhaguer/HAMBEE
-Versión: https://github.com/Rhaguer/HAMBEE/releases/tag/v1.2.0
+[Repositorio del proyecto HAMBEE](https://github.com/Rhaguer/HAMBEE)
+
+[Versión v1.2.0 y archivos de entrega](https://github.com/Rhaguer/HAMBEE/releases/tag/v1.2.0)
 
 La carpeta evidencia/ci-liberacion conserva los resultados descargados del pipeline. liberacion.json enlaza commit, tag, jobs y estado final. El paquete académico agrega este informe y la guía de defensa al código liberado; no modifica los pesos ni los datos de la imagen validada.
 

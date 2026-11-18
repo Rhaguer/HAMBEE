@@ -1,5 +1,6 @@
 """Genera el informe PDF y su fuente Markdown usando la evidencia de la entrega."""
 import json
+from io import BytesIO
 from pathlib import Path
 import sys
 from xml.sax.saxutils import escape
@@ -7,19 +8,23 @@ from xml.sax.saxutils import escape
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+import pymupdf
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_CENTER
 from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import mm
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.platypus import (SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle,
+from reportlab.pdfgen import canvas as pdfcanvas
+from PIL import Image as PILImage
+from reportlab.platypus import (BaseDocTemplate, Frame, PageTemplate, Paragraph, Spacer, Table, TableStyle,
                                PageBreak, Image, KeepTogether)
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs"
 EVIDENCE = ROOT / "evidencia"
 OUT = DOCS / "EVA4_Informe_Haguer_Maldonado.pdf"
+TEMPLATE = DOCS / "plantilla-original"
 
 
 def load(path):
@@ -41,7 +46,7 @@ def main():
     figures = DOCS / "figuras"
     figures.mkdir(exist_ok=True)
     plt.rcParams.update({"font.size": 10, "axes.spines.top": False, "axes.spines.right": False})
-    fig, axes = plt.subplots(1, 2, figsize=(9.6, 3), layout="constrained")
+    fig, axes = plt.subplots(1, 2, figsize=(11.8, 3.1), layout="constrained")
     for offset, name, stats, color in [(-.16, "Sin optimizar", base, "#94a3b8"), (.16, "Optimizado", opt, "#177561")]:
         bars = axes[0].bar([offset, 1+offset], [stats["p50_ms"], stats["p95_ms"]], width=.30, label=name, color=color)
         axes[0].bar_label(bars, fmt="%.2f", padding=3)
@@ -59,7 +64,7 @@ def main():
         for j in range(2):
             axes[1].text(j, i, matrix[i][j], ha="center", va="center", color="white" if matrix[i][j]>20 else "#172b26", fontsize=15)
     fig.savefig(figures / "latencia-matriz.png", dpi=180);plt.close(fig)
-    fig, axes = plt.subplots(1, 2, figsize=(9.6, 3), layout="constrained")
+    fig, axes = plt.subplots(1, 2, figsize=(11.8, 3.1), layout="constrained")
     history = metadata["history"]
     axes[0].semilogy([x["epoch"] for x in history], [x["val_loss"] for x in history], color="#177561")
     best = history[metadata["best_epoch"]-1]
@@ -70,22 +75,22 @@ def main():
     axes[1].set(xlabel="Imágenes por lote", ylabel="Imágenes/s", xticks=[1, 2, 4, 8, 16])
     fig.savefig(figures / "historial-lotes.png", dpi=180);plt.close(fig)
 
-    font_dir = Path("C:/Windows/Fonts")
-    if (font_dir / "arial.ttf").exists():
-        pdfmetrics.registerFont(TTFont("Informe", str(font_dir / "arial.ttf")))
-        pdfmetrics.registerFont(TTFont("InformeBold", str(font_dir / "arialbd.ttf")))
-        pdfmetrics.registerFontFamily("Informe", normal="Informe", bold="InformeBold", italic="Informe", boldItalic="InformeBold")
-        normal, bold = "Informe", "InformeBold"
-    else:
-        normal, bold = "Helvetica", "Helvetica-Bold"
+    fonts = Path("C:/Windows/Fonts")
+    regular_font = fonts / "arial.ttf" if (fonts / "arial.ttf").exists() else TEMPLATE / "NotoSans-Regular.ttf"
+    bold_font = fonts / "arialbd.ttf" if (fonts / "arialbd.ttf").exists() else TEMPLATE / "NotoSans-Bold.ttf"
+    pdfmetrics.registerFont(TTFont("Informe", str(regular_font)))
+    pdfmetrics.registerFont(TTFont("InformeBold", str(bold_font)))
+    pdfmetrics.registerFontFamily("Informe", normal="Informe", bold="InformeBold", italic="Informe", boldItalic="InformeBold")
+    normal, bold = "Informe", "InformeBold"
     styles = getSampleStyleSheet()
-    styles.add(ParagraphStyle(name="TextoInforme", fontName=normal, fontSize=10, leading=14.4, spaceAfter=8, textColor=colors.HexColor("#243341")))
-    styles.add(ParagraphStyle(name="TituloInforme", fontName=bold, fontSize=20, leading=24, spaceAfter=14, textColor=colors.HexColor("#173f4a")))
-    styles.add(ParagraphStyle(name="SubInforme", fontName=bold, fontSize=12, leading=16, spaceBefore=9, spaceAfter=7, textColor=colors.HexColor("#177561")))
-    styles.add(ParagraphStyle(name="CeldaInforme", fontName=normal, fontSize=8.6, leading=11.8))
-    styles.add(ParagraphStyle(name="PequenoInforme", fontName=normal, fontSize=8.2, leading=11.2, spaceAfter=6, textColor=colors.HexColor("#465766")))
+    styles.add(ParagraphStyle(name="TextoInforme", fontName=normal, fontSize=9.9, leading=13.5, spaceAfter=8, textColor=colors.black))
+    styles.add(ParagraphStyle(name="TituloInforme", fontName=bold, fontSize=15.5, leading=21, spaceAfter=12, textColor=colors.HexColor("#c8202d"), keepWithNext=True))
+    styles.add(ParagraphStyle(name="SubInforme", fontName=bold, fontSize=11.5, leading=15, spaceBefore=10, spaceAfter=7, textColor=colors.HexColor("#c8202d"), keepWithNext=True))
+    styles.add(ParagraphStyle(name="CeldaInforme", fontName=normal, fontSize=8.8, leading=11.5))
+    styles.add(ParagraphStyle(name="CabeceraTabla", fontName=bold, fontSize=8.8, leading=11.5, textColor=colors.white))
+    styles.add(ParagraphStyle(name="PequenoInforme", fontName=normal, fontSize=8.8, leading=11.7, spaceAfter=6, textColor=colors.HexColor("#52606d")))
     story, markdown = [], []
-    width = 174 * mm
+    width = 526.8
 
     def title(text):
         story.append(Paragraph(escape(text), styles["TituloInforme"]));markdown.append("# " + text + "\n")
@@ -93,33 +98,30 @@ def main():
         story.append(Paragraph(escape(text), styles["SubInforme"]));markdown.append("## " + text + "\n")
     def p(text, small=False):
         story.append(Paragraph(escape(text), styles["PequenoInforme" if small else "TextoInforme"]));markdown.append(text + "\n")
+    def web_link(label, url):
+        story.append(Paragraph(f'<link href="{escape(url)}" color="#164d8f"><u>{escape(label)}</u></link><br/>{escape(url)}', styles["PequenoInforme"]))
+        markdown.append(f"[{label}]({url})\n")
     def table(headers, rows, widths):
-        cells = [[Paragraph(escape(str(x)), styles["CeldaInforme"]) for x in row] for row in [headers, *rows]]
+        cells = [[Paragraph(escape(str(x)), styles["CabeceraTabla" if i == 0 else "CeldaInforme"]) for x in row] for i, row in enumerate([headers, *rows])]
         t = Table(cells, colWidths=[width * f for f in widths], hAlign="LEFT", repeatRows=1)
-        t.setStyle(TableStyle([("BACKGROUND", (0,0), (-1,0), colors.HexColor("#d9ebe6")),
+        t.setStyle(TableStyle([("BACKGROUND", (0,0), (-1,0), colors.HexColor("#26343f")),
                               ("VALIGN", (0,0), (-1,-1), "TOP"),
-                              ("ROWBACKGROUNDS", (0,1), (-1,-1), [colors.HexColor("#f1f5f7"), colors.white]),
-                              ("LEFTPADDING", (0,0), (-1,-1), 7), ("RIGHTPADDING", (0,0), (-1,-1), 7),
-                              ("TOPPADDING", (0,0), (-1,-1), 7), ("BOTTOMPADDING", (0,0), (-1,-1), 7)]))
+                              ("ROWBACKGROUNDS", (0,1), (-1,-1), [colors.HexColor("#eff3f5"), colors.white]),
+                              ("GRID", (0,0), (-1,-1), 0.3, colors.HexColor("#dddddd")),
+                              ("LEFTPADDING", (0,0), (-1,-1), 5.4), ("RIGHTPADDING", (0,0), (-1,-1), 5.4),
+                              ("TOPPADDING", (0,0), (-1,-1), 4), ("BOTTOMPADDING", (0,0), (-1,-1), 4)]))
         story.extend([t, Spacer(1, 9)])
         markdown.append("| " + " | ".join(headers) + " |\n| " + " | ".join("---" for x in headers) + " |")
         markdown.extend("| " + " | ".join(map(str,row)) + " |" for row in rows);markdown.append("")
     def page():
         story.append(PageBreak())
     def figure(name, caption):
-        story.append(Image(str(figures / name), width=width, height=width * 3/9.6))
+        story.append(Image(str(figures / name), width=width, height=width * 3.1/11.8))
         p(caption, True)
 
-    title("HAMBEE | Implementación y optimización")
+    # La portada usa el membrete de Carta y la composición del informe de referencia.
+    title("Resumen ejecutivo")
     p("Informe técnico defensivo - Evaluación Sumativa N.º 4 de Machine Learning")
-    table(["Identificación", "Datos"], [
-        ["Autores", "Ricardo Haguer y Yerko Maldonado"],
-        ["Carrera / sede", "Ingeniería en Informática / INACAP Puente Alto"],
-        ["Asignatura / sección", "Machine Learning, TIEL26 / 101-8V"],
-        ["Docente", "Francisco Valdivieso Tapia"],
-        ["Fecha / modelo", "18 de noviembre de 2026 / HAMBEE 1.2.0"],
-    ], [.28,.72])
-    sub("Resumen ejecutivo")
     p("Se implementó un servicio local de clasificación de abejas con polen (P) y sin polen (NP), basado en MobileNetV3-Small exportado a ONNX. FastAPI expone inferencia y un panel de demostración. El contenedor se construyó, se probó por HTTP y se liberó mediante un pipeline que conserva evidencia y registra los artefactos en MLflow.")
     table(["Indicador", "Resultado de la evidencia"], [
         ["Prueba reservada", "67/71 aciertos; exactitud 94,37 %; F1 macro 0,9437"],
@@ -220,10 +222,40 @@ def main():
     ], [.27,.73])
     p("El modelo y el conjunto de datos son pequeños y quedan preservados en Git. MLflow agrega trazabilidad por ejecución. No se requiere DVC para esta estrategia; en conjuntos de mayor tamaño se evaluaría almacenamiento externo versionado. El registro actual importa el historial anterior con una etiqueta explícita, sin representar esa importación como un nuevo entrenamiento.")
     sub("Evidencia ejecutada")
-    p(f"Pipeline de liberación: {run_url}", True)
+    web_link("Pipeline de liberación aprobado", run_url)
     p(f"Commit liberado: {release['git_commit']}", True)
     p(f"Registro MLflow: {mlops['run_id']} | estado: {mlops['status']}", True)
     p("Se conservan evidencia-eva4, evidencia-mlops, eva4-image y evidencia-despliegue-eva4. El despliegue de aceptación es efímero y no equivale a un servicio público permanente. El backend SQLite permite inspeccionar parámetros y métricas; los artefactos conservan también los archivos originales en la descarga.")
+    page()
+
+    title("Evidencia visual de la liberación")
+    screenshot = figures / "pipeline-v1.2.0-aprobado.jpg"
+    image_width, image_height = PILImage.open(screenshot).size
+    display_width = 210
+    screenshot_image = Image(str(screenshot), width=display_width, height=display_width*image_height/image_width)
+    right = [
+        Paragraph("Pipeline aprobado", styles["SubInforme"]),
+        Paragraph("La captura corresponde a la ejecución real del tag v1.2.0. GitHub muestra Status Success, con los jobs validate y deploy completados correctamente.", styles["TextoInforme"]),
+        Paragraph("validate comprueba datos, modelo, calidad, latencia, API, Docker y registro MLflow. deploy carga la imagen liberada y vuelve a probarla por HTTP en un runner independiente.", styles["TextoInforme"]),
+        Paragraph("Acceso del docente", styles["SubInforme"]),
+    ]
+    for label, url in [
+        ("1. Repositorio del proyecto", "https://github.com/Rhaguer/HAMBEE"),
+        ("2. Versión v1.2.0 y archivos de entrega", "https://github.com/Rhaguer/HAMBEE/releases/tag/v1.2.0"),
+        ("3. Pipeline de liberación aprobado", run_url),
+    ]:
+        right.append(Paragraph(f'<link href="{escape(url)}" color="#164d8f"><u>{escape(label)}</u></link><br/>{escape(url)}', styles["PequenoInforme"]))
+        right.append(Spacer(1, 9))
+        markdown.append(f"[{label}]({url})\n")
+    right.append(Paragraph("Los tres enlaces son clicables en este PDF. El repositorio identifica el código; la versión contiene los archivos de entrega; el pipeline conserva jobs, logs y artefactos verificables.", styles["TextoInforme"]))
+    visual = Table([[screenshot_image, right]], colWidths=[226, width-226], hAlign="LEFT")
+    visual.setStyle(TableStyle([("VALIGN",(0,0),(-1,-1),"TOP"),
+                               ("LEFTPADDING",(0,0),(0,0),0), ("RIGHTPADDING",(0,0),(0,0),16),
+                               ("LEFTPADDING",(1,0),(1,0),0), ("RIGHTPADDING",(1,0),(1,0),0),
+                               ("TOPPADDING",(0,0),(-1,-1),0), ("BOTTOMPADDING",(0,0),(-1,-1),0)]))
+    story.append(visual)
+    p("Figura 3. Captura de GitHub de la ejecución 44284173203. Fuente: página pública de GitHub Actions; captura realizada el 18 de noviembre de 2026.", True)
+    markdown.append("![Pipeline aprobado](figuras/pipeline-v1.2.0-aprobado.jpg)\n")
     page()
 
     title("7. API y contenedor probados")
@@ -267,7 +299,8 @@ def main():
 
     title("9. Trazabilidad y referencias")
     sub("Artefactos de la entrega")
-    p(f"Repositorio: https://github.com/Rhaguer/HAMBEE\nVersión: https://github.com/Rhaguer/HAMBEE/releases/tag/{release['tag']}", True)
+    web_link("Repositorio del proyecto HAMBEE", "https://github.com/Rhaguer/HAMBEE")
+    web_link("Versión v1.2.0 y archivos de entrega", f"https://github.com/Rhaguer/HAMBEE/releases/tag/{release['tag']}")
     p("La carpeta evidencia/ci-liberacion conserva los resultados descargados del pipeline. liberacion.json enlaza commit, tag, jobs y estado final. El paquete académico agrega este informe y la guía de defensa al código liberado; no modifica los pesos ni los datos de la imagen validada.")
     p("Modelo SHA-256: " + metadata["model_sha256"], True)
     p("Manifiesto SHA-256: " + metadata["dataset_manifest_sha256"], True)
@@ -284,22 +317,45 @@ def main():
 
     def header(canvas, doc):
         canvas.saveState()
-        canvas.setFillColor(colors.HexColor("#173f4a"))
-        canvas.rect(0, 280*mm, 210*mm, 17*mm, fill=1, stroke=0)
-        canvas.setFont(bold, 10)
-        canvas.setFillColor(colors.white)
-        canvas.drawString(18*mm, 286*mm, "HAMBEE  /  EVA4  /  INFORME TÉCNICO")
-        canvas.setStrokeColor(colors.HexColor("#cbd5df"))
-        canvas.line(18*mm, 17*mm, 192*mm, 17*mm)
-        canvas.setFillColor(colors.HexColor("#465766"));canvas.setFont(normal, 8)
-        canvas.drawString(18*mm, 12*mm, "Ricardo Haguer · Yerko Maldonado | 18-11-2026")
-        canvas.drawRightString(192*mm, 12*mm, str(doc.page))
+        canvas.drawImage(str(TEMPLATE / "encabezado.png"), 0, 792-123.6, width=618.95, height=116.65, mask="auto")
+        canvas.drawImage(str(TEMPLATE / "pie.jpg"), 0, 8.35, width=614.7, height=6)
+        canvas.setFillColor(colors.black);canvas.setFont(normal, 9)
+        canvas.drawRightString(569.6, 23.3, str(doc.page+1))
         canvas.restoreState()
-    doc = SimpleDocTemplate(str(OUT), pagesize=(210*mm, 297*mm), leftMargin=18*mm, rightMargin=18*mm,
-                            topMargin=25*mm, bottomMargin=24*mm, title="HAMBEE - Informe técnico EVA4",
-                            author="Ricardo Haguer y Yerko Maldonado")
-    doc.build(story, onFirstPage=header, onLaterPages=header)
-    (DOCS / "EVA4_Informe_Haguer_Maldonado.md").write_text("\n".join(markdown), encoding="utf-8")
+    buffer = BytesIO()
+    doc = BaseDocTemplate(buffer, pagesize=(612, 792), title="HAMBEE - Informe técnico EVA4",
+                          author="Ricardo Haguer y Yerko Maldonado")
+    frame = Frame(42.6, 50, width, 612, leftPadding=0, rightPadding=0, topPadding=0, bottomPadding=0)
+    doc.addPageTemplates(PageTemplate(id="INACAP", frames=[frame], onPage=header))
+    doc.build(story)
+    cover_buffer = BytesIO()
+    cover = pdfcanvas.Canvas(cover_buffer, pagesize=(612, 792))
+    cover.drawImage(str(TEMPLATE / "encabezado.png"),0,792-123.6,width=618.95,height=116.65,mask="auto")
+    cover.drawImage(str(TEMPLATE / "pie.jpg"),0,8.35,width=614.7,height=6)
+    cover.setFillColor(colors.HexColor("#c8202d"));cover.setFont(bold,25)
+    cover.drawCentredString(306,612,"HAMBEE")
+    cover.setFillColor(colors.black);cover.setFont(normal,15)
+    cover.drawCentredString(306,577,"Implementación y optimización de un clasificador de abejas con y sin polen")
+    cover.setFillColor(colors.HexColor("#52606d"));cover.setFont(normal,8.8)
+    cover.drawString(42.6,546,"Evaluación Sumativa N.º 4 · Machine Learning")
+    cover.drawString(42.6,534,"Unidad 4 · Implementación de modelos Deep Learning")
+    cover.drawImage(str(TEMPLATE / "logo-hambee.png"),181,792-496.2,width=250,height=234.35,mask="auto")
+    cover.setFillColor(colors.black);cover.setFont(normal,9.9)
+    for index, line in enumerate([
+        "Carrera: Ingeniería en Informática", "Sección: TIEL26 · 101-8V", "Asignatura: Machine Learning",
+        "Autores: Ricardo Haguer y Yerko Maldonado", "Docente: Francisco Valdivieso Tapia",
+        "Sede: INACAP Puente Alto", "Fecha de esta versión: 18 de noviembre de 2026",
+    ]):
+        cover.drawString(42.6,792-(632+18*index),line)
+    cover.setFont(normal,9);cover.drawRightString(569.6,23.3,"1")
+    cover.showPage();cover.save()
+    final = pymupdf.open(stream=cover_buffer.getvalue(),filetype="pdf")
+    body = pymupdf.open(stream=buffer.getvalue(), filetype="pdf")
+    final.insert_pdf(body)
+    final.set_metadata({"title": "HAMBEE - Informe técnico EVA4", "author": "Ricardo Haguer y Yerko Maldonado"})
+    final.save(OUT, garbage=4, deflate=True)
+    portada = "# HAMBEE\n\nImplementación y optimización de un clasificador de abejas con y sin polen\n\nEvaluación Sumativa N.º 4 · Machine Learning\n\nUnidad 4 · Implementación de modelos Deep Learning\n\nCarrera: Ingeniería en Informática\n\nSección: TIEL26 · 101-8V\n\nAsignatura: Machine Learning\n\nAutores: Ricardo Haguer y Yerko Maldonado\n\nDocente: Francisco Valdivieso Tapia\n\nSede: INACAP Puente Alto\n\nFecha de esta versión: 18 de noviembre de 2026\n\n"
+    (DOCS / "EVA4_Informe_Haguer_Maldonado.md").write_text(portada+"\n".join(markdown), encoding="utf-8")
     print(OUT)
 
 

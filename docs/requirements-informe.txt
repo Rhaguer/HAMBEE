@@ -1,2 +1,3 @@
 reportlab==5.1.0
 matplotlib==3.10.8
+PyMuPDF==2.0

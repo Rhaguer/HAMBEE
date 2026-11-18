@@ -2,6 +2,8 @@
 
 Repositorio de entrega: https://github.com/Rhaguer/HAMBEE. El informe vigente se encuentra en `docs/EVA4_Informe_Haguer_Maldonado.pdf`; la guía de defensa y la matriz de la pauta están en `docs/DEFENSA_EVA4.md`.
 
+El informe conserva el membrete de `Carta-1-60-vert.docx` y el estilo de `INFORME_TECNICO.pdf`, con los datos de identificación junto al extremo inferior de la portada. La página 9 incluye una captura real del pipeline aprobado y enlaces clicables al repositorio, a la versión v1.2.0 y a la ejecución de liberación.
+
 **Liberación verificada:** [v1.2.0](https://github.com/Rhaguer/HAMBEE/releases/tag/v1.2.0). La [ejecución de liberación](https://github.com/Rhaguer/HAMBEE/actions/runs/44284173203) aprobó `validate` y `deploy`, incluyendo Docker por HTTP y MLflow. Los resultados reales están en `evidencia/ci-liberacion/` y `evidencia/liberacion.json`. El lanzador también se probó en Windows desde un entorno virtual nuevo (`evidencia/api-lanzador-windows.json`).
 
 Clasificador de abejas con polen (P) y sin polen (NP), MobileNetV3-Small v1.2.0, época 33 de 40. El ZIP de datos tiene 714 JPEG originales y su manifiesto. Las particiones por grupo de origen tienen 571 imágenes de entrenamiento, 72 de validación y 71 de prueba.
