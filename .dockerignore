@@ -4,13 +4,14 @@
 !preprocess.py
 !demostracion.py
 !procesar_dataset.py
+!dataset.py
 !models/
 !models/abejas.onnx
 !models/metadata.json
 !panel/
 !panel/**
-!validacion/
-!validacion/**
+!data/
+!data/Dataset.zip
 !evidencia/
 !evidencia/benchmark.json
 !evidencia/lotes-cpu.json

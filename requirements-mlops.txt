@@ -1,0 +1,2 @@
+-r requirements-test.txt
+mlflow-skinny==3.17.2

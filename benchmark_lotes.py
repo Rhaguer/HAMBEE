@@ -1,7 +1,6 @@
 """Mide lotes fijos en CPU como referencia para evaluar un agrupador dinámico."""
 
 import argparse
-import csv
 import hashlib
 import json
 from pathlib import Path
@@ -9,25 +8,18 @@ import platform
 from time import perf_counter
 
 import numpy as np
-from PIL import Image
 
 from app import MODELS, session_for
-from preprocess import prepare
+from dataset import Dataset
 
 
 BATCH_SIZES = (1, 2, 4, 8, 16)
 
 
 def evaluate(dataset, repeats):
-    with (dataset / "manifest.csv").open(encoding="utf-8-sig", newline="") as stream:
-        rows = [row for row in csv.DictReader(stream) if row["split"] == "test"]
-    inputs = []
-    for row in rows:
-        path = dataset / row["relative_path"]
-        if hashlib.sha256(path.read_bytes()).hexdigest() != row["sha256"]:
-            raise ValueError(f"Archivo de prueba alterado: {path}")
-        with Image.open(path) as image:
-            inputs.append(prepare(image))
+    manifest_hash = json.loads((MODELS / "metadata.json").read_text(encoding="utf-8"))["dataset_manifest_sha256"]
+    with Dataset(dataset, manifest_hash) as data:
+        inputs = [data.tensor(row) for row in data.partition("test")]
     if len(inputs) < max(BATCH_SIZES):
         raise ValueError("Se requieren al menos 16 imágenes de prueba.")
 

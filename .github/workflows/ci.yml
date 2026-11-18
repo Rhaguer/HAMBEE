@@ -1,8 +1,9 @@
-name: Validar y empaquetar inferencia
+name: Validar desplegar y empaquetar HAMBEE EVA4
+
 on:
   pull_request:
   push:
-    branches: [main]
+    branches: [main, 'eva4/**']
     tags: ['v*']
   workflow_dispatch:
 
@@ -12,54 +13,100 @@ permissions:
 jobs:
   validate:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: python -m pip install -r requirements-test.txt
-      - name: Pruebas del contrato
-        run: python smoke.py "$(find validacion/test/P -name '*.jpg' -print -quit)"
-      - name: Regresiones de calidad y latencia
+          cache: pip
+          cache-dependency-path: '**/requirements*.txt'
+      - name: Localizar proyecto
         run: |
-          python benchmark.py validacion --output benchmark-ci.json
+          if [ -f EVA4/Dockerfile ]; then echo 'HAMBEE_PROJECT=EVA4' >> "$GITHUB_ENV"
+          else echo 'HAMBEE_PROJECT=.' >> "$GITHUB_ENV"
+          fi
+      - name: Validar datos modelo y contrato
+        working-directory: ${{ env.HAMBEE_PROJECT }}
+        run: |
+          python -m pip install -r requirements-test.txt
+          python verificar_dataset.py data/Dataset.zip > dataset-ci.json
+          python smoke.py --panel > api-local-ci.json
+      - name: Medir calidad latencia y lotes
+        working-directory: ${{ env.HAMBEE_PROJECT }}
+        run: |
+          python procesar_dataset.py data/Dataset.zip --output resultados-ci
+          python benchmark.py data/Dataset.zip --output benchmark-ci.json
           python quality_gate.py benchmark-ci.json
-      - name: Medir lotes en CPU
-        run: python benchmark_lotes.py validacion --repeats 3 --output lotes-ci.json
-      - name: Construir imagen
-        run: docker build -t eva4:ci .
-      - name: Probar el contenedor por HTTP
+          python benchmark_lotes.py data/Dataset.zip --repeats 3 --output lotes-ci.json
+      - name: Construir y desplegar en el entorno de pruebas
+        working-directory: ${{ env.HAMBEE_PROJECT }}
+        run: python validar_docker.py --imagen hambee:ci --salida api-docker-ci.json
+      - name: Registrar modelo datos y validación en MLflow
+        working-directory: ${{ env.HAMBEE_PROJECT }}
         run: |
-          docker run -d --name eva4-ci -p 127.0.0.1:8000:8000 eva4:ci
-          for attempt in {1..30}; do
-            if curl -fs --max-time 2 http://127.0.0.1:8000/health; then
-              break
-            fi
-            if [ "$attempt" -eq 30 ]; then
-              docker logs eva4-ci
-              exit 1
-            fi
-            sleep 2
-          done
-          python smoke.py "$(find validacion/test/P -name '*.jpg' -print -quit)" --url http://127.0.0.1:8000 --panel
-      - name: Evidencia de CI
+          python -m pip install -r requirements-mlops.txt
+          python registrar_mlflow.py --salida resultados-mlops
+      - name: Conservar el registro MLOps
+        uses: actions/upload-artifact@v4
+        with:
+          name: evidencia-mlops
+          path: ${{ env.HAMBEE_PROJECT }}/resultados-mlops/
+      - name: Guardar evidencia
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: mediciones
+          name: evidencia-eva4
           path: |
-            benchmark-ci.json
-            lotes-ci.json
-      - name: Empaquetar versión aprobada
+            ${{ env.HAMBEE_PROJECT }}/*-ci.json
+            ${{ env.HAMBEE_PROJECT }}/resultados-ci/
+      - name: Empaquetar la versión validada
         if: startsWith(github.ref, 'refs/tags/v')
+        working-directory: ${{ env.HAMBEE_PROJECT }}
         shell: bash
         run: |
-          [[ "$GITHUB_REF_NAME" =~ ^v[0-9]+[.][0-9]+[.][0-9]+$ ]]
-          docker tag eva4:ci "eva4:${GITHUB_REF_NAME}"
-          docker save "eva4:${GITHUB_REF_NAME}" | gzip > eva4-image.tar.gz
-      - uses: actions/upload-artifact@v4
+          version="$(python -c 'import json; print(json.load(open("models/metadata.json"))["model_version"])')"
+          test "$GITHUB_REF_NAME" = "v$version"
+          docker tag hambee:ci "hambee:$version"
+          docker save "hambee:$version" | gzip > eva4-image.tar.gz
+          sha256sum eva4-image.tar.gz > eva4-image.tar.gz.sha256
+      - name: Guardar imagen versionada
         if: startsWith(github.ref, 'refs/tags/v')
+        uses: actions/upload-artifact@v4
         with:
           name: eva4-image
-          path: eva4-image.tar.gz
+          compression-level: 0
+          path: ${{ env.HAMBEE_PROJECT }}/eva4-image.tar.gz*
 
+  deploy:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: '**/requirements*.txt'
+      - uses: actions/download-artifact@v4
+        with:
+          name: eva4-image
+          path: release-image
+      - name: Verificar y cargar el artefacto liberado
+        working-directory: release-image
+        run: |
+          sha256sum -c eva4-image.tar.gz.sha256
+          docker load --input eva4-image.tar.gz
+      - name: Desplegar y verificar la imagen liberada
+        shell: bash
+        run: |
+          if [ -f EVA4/Dockerfile ]; then cd EVA4; fi
+          python -m pip install -r requirements-test.txt
+          python validar_docker.py --solo-probar --imagen "hambee:${GITHUB_REF_NAME#v}" --salida api-release-ci.json
+      - name: Guardar evidencia del despliegue
+        uses: actions/upload-artifact@v4
+        with:
+          name: evidencia-despliegue-eva4
+          path: '**/api-release-ci.json'

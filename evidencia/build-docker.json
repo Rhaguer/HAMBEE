@@ -1,0 +1,8 @@
+{
+  "result": "built",
+  "docker_engine": "28.5.2",
+  "docker_image": "hambee:1.2.0",
+  "docker_image_id": "sha256:7a75fa4787b651acdabafbfb80323bf8d6e05b1cecbbaff3bcfbc68cfe49e871",
+  "dockerfile_sha256": "4bc102f01b41e3f428d1a4f87459298882bb9feeceda61b2c1a0315c4a8ca82e",
+  "environment": "Linux x86_64 virtualizado con QEMU TCG"
+}

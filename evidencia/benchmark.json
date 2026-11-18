@@ -1,45 +1,46 @@
 {
-  "platform": "Windows-11-10.0.26300-SP0",
-  "cpu": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "cpu": "AMD EPYC 9V74 80-Core Processor",
   "ort": "1.31.1",
   "model_bytes": 6089244,
+  "model_sha256": "0269cdc030412fbc0ca55592c5fd3d91bad56ff01058fefec1a7f4a1ead0b203",
   "sin_optimizacion": {
-    "startup_ms": 30.256799999961004,
-    "p50_ms": 2.120500000046377,
-    "p95_ms": 3.859680000186927,
+    "startup_ms": 50.13298900007612,
+    "p50_ms": 2.9174520000196935,
+    "p95_ms": 3.8675928999396096,
     "samples": 355,
-    "rss_after_mib": 103.95703125,
-    "rss_delta_mib": 13.140625,
-    "accuracy": 0.9859154929577465,
-    "macro_f1": 0.9859043081199126,
+    "rss_after_mib": 107.94140625,
+    "rss_delta_mib": 17.44921875,
+    "accuracy": 0.9436619718309859,
+    "macro_f1": 0.9436507936507936,
     "confusion_np_p": [
       [
         34,
         0
       ],
       [
-        1,
-        36
+        4,
+        33
       ]
     ]
   },
   "optimizado": {
-    "startup_ms": 23.782400000072812,
-    "p50_ms": 0.627300000132891,
-    "p95_ms": 1.1377200000197267,
+    "startup_ms": 55.158430000005865,
+    "p50_ms": 0.6327449999616874,
+    "p95_ms": 0.7938542000147208,
     "samples": 355,
-    "rss_after_mib": 105.09375,
-    "rss_delta_mib": 14.14453125,
-    "accuracy": 0.9859154929577465,
-    "macro_f1": 0.9859043081199126,
+    "rss_after_mib": 111.21875,
+    "rss_delta_mib": 21.85546875,
+    "accuracy": 0.9436619718309859,
+    "macro_f1": 0.9436507936507936,
     "confusion_np_p": [
       [
         34,
         0
       ],
       [
-        1,
-        36
+        4,
+        33
       ]
     ]
   },

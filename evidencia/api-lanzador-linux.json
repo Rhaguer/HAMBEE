@@ -1,0 +1,108 @@
+{
+  "health": {
+    "status": "ready",
+    "model_version": "1.2.0",
+    "provider": "CPUExecutionProvider"
+  },
+  "sample": "test/P/P10109-127r.jpg",
+  "prediction": {
+    "label": "P",
+    "confidence": 0.9999959468841553,
+    "probabilities": {
+      "NP": 4.04704087486607e-06,
+      "P": 0.9999959468841553
+    },
+    "model_version": "1.2.0",
+    "inference_ms": 1.1505640004543238
+  },
+  "request_ms": 55.849422000392224,
+  "validated_status_codes": [
+    200,
+    413,
+    415,
+    422
+  ],
+  "resolution_limit_status": 413,
+  "http_sequential": {
+    "samples": 142,
+    "p50_ms": 47.947451500476745,
+    "p95_ms": 51.83712340012788
+  },
+  "panel": {
+    "test": {
+      "images": 71,
+      "correct": 67,
+      "accuracy": 0.9436619718309859,
+      "macro_f1": 0.9436507936507936,
+      "confusion_np_p": [
+        [
+          34,
+          0
+        ],
+        [
+          4,
+          33
+        ]
+      ],
+      "errors": [
+        {
+          "image": "P13151-44r.jpg",
+          "actual": "P",
+          "predicted": "NP"
+        },
+        {
+          "image": "P21252-68r.jpg",
+          "actual": "P",
+          "predicted": "NP"
+        },
+        {
+          "image": "P52587-28r.jpg",
+          "actual": "P",
+          "predicted": "NP"
+        },
+        {
+          "image": "P9995-123r.jpg",
+          "actual": "P",
+          "predicted": "NP"
+        }
+      ],
+      "elapsed_seconds": 0.14131717100008245
+    },
+    "full": {
+      "runtime": "ONNX Runtime 1.31.1 / CPUExecutionProvider",
+      "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+      "model_version": "1.2.0",
+      "model_sha256": "0269cdc030412fbc0ca55592c5fd3d91bad56ff01058fefec1a7f4a1ead0b203",
+      "dataset_manifest_sha256": "b47431a5f1a82093081e9bc2a23e049c94e0192ba7f7ce430fda391752b91a83",
+      "processed": 714,
+      "partitions": {
+        "train": 571,
+        "test": 71,
+        "val": 72
+      },
+      "batch_size": 8,
+      "full_batches": 89,
+      "p95_full_batch_inference_ms": 4.803335000178777,
+      "model_execution_seconds": 0.404330696002944,
+      "processing_seconds": 1.19925784499992,
+      "processing_images_per_second": 595.3682129134186,
+      "test": {
+        "images": 71,
+        "correct": 67,
+        "accuracy": 0.9436619718309859,
+        "confusion": {
+          "NP": {
+            "NP": 34,
+            "P": 0
+          },
+          "P": {
+            "NP": 4,
+            "P": 33
+          }
+        }
+      }
+    },
+    "csv_rows": 714,
+    "gallery_images": 714
+  }
+}

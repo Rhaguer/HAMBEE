@@ -1,0 +1,49 @@
+{
+  "split": "val",
+  "calibration_split": "train",
+  "calibration_images": 128,
+  "model_sha256": "0269cdc030412fbc0ca55592c5fd3d91bad56ff01058fefec1a7f4a1ead0b203",
+  "cpu": "AMD EPYC 9V74 80-Core Processor",
+  "fp32": {
+    "model_bytes": 6089244,
+    "startup_ms": 23.228694000067662,
+    "p50_ms": 0.6259520000071461,
+    "p95_ms": 0.8719451500383002,
+    "samples": 360,
+    "rss_after_mib": 112.6796875,
+    "rss_delta_mib": 21.9296875,
+    "accuracy": 1.0,
+    "macro_f1": 1.0,
+    "confusion_np_p": [
+      [
+        35,
+        0
+      ],
+      [
+        0,
+        37
+      ]
+    ]
+  },
+  "int8": {
+    "model_bytes": 1852206,
+    "startup_ms": 42.508812999926704,
+    "p50_ms": 0.9583744999872579,
+    "p95_ms": 1.1628116999531812,
+    "samples": 360,
+    "rss_after_mib": 107.13671875,
+    "rss_delta_mib": 15.5078125,
+    "accuracy": 0.5,
+    "macro_f1": 0.49961389961389957,
+    "confusion_np_p": [
+      [
+        19,
+        16
+      ],
+      [
+        20,
+        17
+      ]
+    ]
+  }
+}

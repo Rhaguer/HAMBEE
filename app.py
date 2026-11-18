@@ -8,7 +8,7 @@ from tempfile import TemporaryDirectory
 from threading import Lock
 from time import perf_counter
 from typing import Annotated, Literal
-from zipfile import ZipFile
+from zipfile import BadZipFile
 
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.responses import FileResponse, Response
@@ -18,6 +18,7 @@ import onnxruntime as ort
 from PIL import Image, UnidentifiedImageError
 from pydantic import BaseModel, Field
 
+from dataset import Dataset
 from preprocess import CLASSES, SIZE, prepare
 
 ROOT = Path(__file__).resolve().parent
@@ -58,14 +59,14 @@ app = FastAPI(
         "mediante un modelo ONNX ejecutado en CPU. Usa **GET /health** para "
         "comprobar que el modelo está listo y **POST /predict** para cargar una imagen."
     ),
-    version="1.1.0",
+    version="1.2.0",
     lifespan=lifespan,
 )
 
 
 class Health(BaseModel):
     status: Literal["ready"] = Field(description="El modelo se cargó y puede recibir solicitudes.")
-    model_version: str = Field(examples=["1.1.0"])
+    model_version: str = Field(examples=["1.2.0"])
     provider: str = Field(examples=["CPUExecutionProvider"])
 
 
@@ -84,7 +85,7 @@ class Prediction(BaseModel):
 @app.get(
     "/health", response_model=Health, tags=["Estado"], summary="Comprobar disponibilidad del modelo",
     responses={200: {"content": {"application/json": {"example": {
-        "status": "ready", "model_version": "1.1.0", "provider": "CPUExecutionProvider",
+        "status": "ready", "model_version": "1.2.0", "provider": "CPUExecutionProvider",
     }}}}},
 )
 def health():
@@ -100,7 +101,7 @@ def health():
     description=(
         "En **Try it out**, selecciona un JPEG o PNG de hasta **5 MiB** y "
         "**12 megapíxeles**. Para reproducir el ejemplo, usa la imagen incluida "
-        "`validacion/test/P/P10109-127r.jpg`. El tiempo varía según el equipo. "
+        "`test/P/P10109-127r.jpg` del dataset. El tiempo varía según el equipo. "
         "Si falta el campo `file`, la API responde con 422."
     ),
     responses={
@@ -108,7 +109,7 @@ def health():
             "label": "P",
             "confidence": 0.9999,
             "probabilities": {"NP": 0.0001, "P": 0.9999},
-            "model_version": "1.1.0",
+            "model_version": "1.2.0",
             "inference_ms": 1.0,
         }}}},
         413: {"description": "El archivo o la imagen supera los límites permitidos.",
@@ -172,19 +173,20 @@ def evaluate_demo():
     if not app.state.demo_lock.acquire(blocking=False):
         raise HTTPException(409, "Ya hay una evaluación en curso.")
     try:
-        result = {"test": evaluate_test(app.state.session), "full": None}
-        rows = result["test"].pop("results")
         archive = dataset_archive()
-        if archive is not None:
-            try:
-                result["full"] = process(archive, app.state.demo_output, batch_size=8)
-                with (app.state.demo_output / "predicciones-dataset.csv").open(
-                        encoding="utf-8-sig", newline="") as stream:
-                    rows = list(csv.DictReader(stream))
-            except (ValueError, OSError) as error:
-                raise HTTPException(422, f"No se pudo procesar el ZIP: {error}") from error
+        if archive is None:
+            raise HTTPException(404, "Configura el ZIP de las 714 imágenes para evaluar.")
+        try:
+            test = evaluate_test(app.state.session, archive, app.state.metadata["dataset_manifest_sha256"])
+            test.pop("results")
+            full = process(archive, app.state.demo_output, batch_size=8)
+            with (app.state.demo_output / "predicciones-dataset.csv").open(
+                    encoding="utf-8-sig", newline="") as stream:
+                rows = list(csv.DictReader(stream))
+        except (BadZipFile, KeyError, ValueError, OSError) as error:
+            raise HTTPException(422, "El dataset no coincide con la versión del modelo.") from error
         app.state.demo_images = (rows, archive)
-        return result
+        return {"test": test, "full": full}
     finally:
         app.state.demo_lock.release()
 
@@ -216,11 +218,8 @@ def image_preview(image_id: int):
     if not 0 <= image_id < len(rows):
         raise HTTPException(404, "Imagen no encontrada.")
     path = rows[image_id]["ruta"]
-    if not archive:
-        return FileResponse(ROOT / "validacion" / path)
-    with ZipFile(archive) as dataset:
-        manifest = next(name for name in dataset.namelist() if name.endswith("/manifest.csv"))
-        data = dataset.read(manifest.rsplit("/", 1)[0] + "/" + path)
+    with Dataset(archive, app.state.metadata["dataset_manifest_sha256"]) as dataset:
+        data = dataset.image_bytes(path)
     return Response(data, media_type="image/jpeg")
 
 

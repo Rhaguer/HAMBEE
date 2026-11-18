@@ -1,33 +1,33 @@
 {
   "runtime": "ONNX Runtime 1.31.1 / CPUExecutionProvider",
-  "platform": "Windows-11-10.0.26300-SP0",
-  "model_version": "1.1.0",
-  "model_sha256": "bcb15d6d8de0a34b030a9fc9ff195424962b0248448d5305feb60444a046184d",
-  "dataset_manifest_sha256": "f0a0638953b21429acc27d8065a122885f34d20efd6e283357ddb67a9f97f68c",
-  "processed": 7140,
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "model_version": "1.2.0",
+  "model_sha256": "0269cdc030412fbc0ca55592c5fd3d91bad56ff01058fefec1a7f4a1ead0b203",
+  "dataset_manifest_sha256": "b47431a5f1a82093081e9bc2a23e049c94e0192ba7f7ce430fda391752b91a83",
+  "processed": 714,
   "partitions": {
-    "train": 6997,
+    "train": 571,
     "test": 71,
     "val": 72
   },
   "batch_size": 8,
-  "full_batches": 892,
-  "p95_full_batch_inference_ms": 7.053894999921789,
-  "model_execution_seconds": 4.456908899999917,
-  "processing_seconds": 11.135782899999867,
-  "processing_images_per_second": 641.1762930471718,
+  "full_batches": 89,
+  "p95_full_batch_inference_ms": 4.98555579999902,
+  "model_execution_seconds": 0.43675467300028004,
+  "processing_seconds": 1.1821571250000034,
+  "processing_images_per_second": 603.9806256719029,
   "test": {
     "images": 71,
-    "correct": 70,
-    "accuracy": 0.9859154929577465,
+    "correct": 67,
+    "accuracy": 0.9436619718309859,
     "confusion": {
       "NP": {
         "NP": 34,
         "P": 0
       },
       "P": {
-        "NP": 1,
-        "P": 36
+        "NP": 4,
+        "P": 33
       }
     }
   }

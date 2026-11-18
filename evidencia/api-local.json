@@ -1,87 +1,103 @@
 {
   "health": {
     "status": "ready",
-    "model_version": "1.1.0",
+    "model_version": "1.2.0",
     "provider": "CPUExecutionProvider"
   },
-  "sample": "P10109-127r.jpg",
+  "sample": "test/P/P10109-127r.jpg",
   "prediction": {
     "label": "P",
-    "confidence": 1.0,
+    "confidence": 0.9999959468841553,
     "probabilities": {
-      "NP": 4.1538306128074964e-10,
-      "P": 1.0
+      "NP": 4.04704087486607e-06,
+      "P": 0.9999959468841553
     },
-    "model_version": "1.1.0",
-    "inference_ms": 1.0730000001331064
+    "model_version": "1.2.0",
+    "inference_ms": 1.2471860000005108
   },
-  "request_ms": 12.551899999834859,
+  "request_ms": 17.454903999919225,
   "validated_status_codes": [
     200,
     413,
     415,
     422
   ],
+  "resolution_limit_status": 413,
   "panel": {
-    "status": 200,
     "test": {
       "images": 71,
-      "correct": 70,
-      "accuracy": 0.9859154929577465,
-      "macro_f1": 0.9859043081199126,
+      "correct": 67,
+      "accuracy": 0.9436619718309859,
+      "macro_f1": 0.9436507936507936,
       "confusion_np_p": [
         [
           34,
           0
         ],
         [
-          1,
-          36
+          4,
+          33
         ]
       ],
       "errors": [
+        {
+          "image": "P13151-44r.jpg",
+          "actual": "P",
+          "predicted": "NP"
+        },
+        {
+          "image": "P21252-68r.jpg",
+          "actual": "P",
+          "predicted": "NP"
+        },
+        {
+          "image": "P52587-28r.jpg",
+          "actual": "P",
+          "predicted": "NP"
+        },
         {
           "image": "P9995-123r.jpg",
           "actual": "P",
           "predicted": "NP"
         }
       ],
-      "elapsed_seconds": 0.13768400000003567
+      "elapsed_seconds": 0.16228420400000232
     },
     "full": {
       "runtime": "ONNX Runtime 1.31.1 / CPUExecutionProvider",
-      "platform": "Windows-11-10.0.26300-SP0",
-      "model_version": "1.1.0",
-      "model_sha256": "bcb15d6d8de0a34b030a9fc9ff195424962b0248448d5305feb60444a046184d",
-      "dataset_manifest_sha256": "f0a0638953b21429acc27d8065a122885f34d20efd6e283357ddb67a9f97f68c",
-      "processed": 7140,
+      "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+      "model_version": "1.2.0",
+      "model_sha256": "0269cdc030412fbc0ca55592c5fd3d91bad56ff01058fefec1a7f4a1ead0b203",
+      "dataset_manifest_sha256": "b47431a5f1a82093081e9bc2a23e049c94e0192ba7f7ce430fda391752b91a83",
+      "processed": 714,
       "partitions": {
-        "train": 6997,
+        "train": 571,
         "test": 71,
         "val": 72
       },
       "batch_size": 8,
-      "full_batches": 892,
-      "p95_full_batch_inference_ms": 5.946759999994811,
-      "model_execution_seconds": 4.541634299999714,
-      "processing_seconds": 11.281335500000068,
-      "processing_images_per_second": 632.9037905130963,
+      "full_batches": 89,
+      "p95_full_batch_inference_ms": 6.899403200009145,
+      "model_execution_seconds": 0.5018318460001865,
+      "processing_seconds": 1.417022535000001,
+      "processing_images_per_second": 503.87342640249506,
       "test": {
         "images": 71,
-        "correct": 70,
-        "accuracy": 0.9859154929577465,
+        "correct": 67,
+        "accuracy": 0.9436619718309859,
         "confusion": {
           "NP": {
             "NP": 34,
             "P": 0
           },
           "P": {
-            "NP": 1,
-            "P": 36
+            "NP": 4,
+            "P": 33
           }
         }
       }
     },
-    "csv_rows": 7140
+    "csv_rows": 714,
+    "gallery_images": 714
   }
 }

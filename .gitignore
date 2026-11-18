@@ -1,7 +1,10 @@
+.venv/
+.venv-*/
 __pycache__/
 *.py[cod]
-.venv/
-benchmark-local.json
-benchmark-ci.json
-data/
-resultados-dataset/
+resultados/
+resultados-ci/
+resultados-docker/
+resultados-mlops/
+*-ci.json
+eva4-image.tar.gz*

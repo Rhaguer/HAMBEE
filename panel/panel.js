@@ -60,12 +60,14 @@ function drawHistory() {
   const history = evidence.model.history, selected = evidence.model.best_epoch;
   const xmin = 49, xmax = width - 17, ymin = 18, ymax = height - 31;
   const x = (epoch) => xmin + (epoch - 1) / (history.length - 1) * (xmax - xmin);
-  const y = (loss) => ymin + (-Math.log10(Math.max(loss, 0.0001)) - 1) / 3 * (ymax - ymin);
+  const logs = history.map((item) => Math.log10(item.val_loss));
+  const low = Math.floor(Math.min(...logs)), high = Math.ceil(Math.max(...logs));
+  const y = (loss) => ymin + (high - Math.log10(loss)) / (high - low || 1) * (ymax - ymin);
   ctx.font = "12px system-ui"; ctx.fillStyle = "#b0c0b8"; ctx.strokeStyle = "#33433d";
-  for (const value of [0.1, 0.01, 0.001, 0.0001]) {
-    const at = y(value);
+  for (let exponent = low; exponent <= high; exponent++) {
+    const value = 10 ** exponent, at = y(value);
     ctx.beginPath(); ctx.moveTo(xmin, at); ctx.lineTo(xmax, at); ctx.stroke();
-    ctx.fillText(String(value).replace(".", ","), 2, at + 4);
+    ctx.fillText(number(value, Math.max(0, -exponent)), 2, at + 4);
   }
   for (const epoch of [1, 10, 20, 30, 40]) ctx.fillText(String(epoch), x(epoch) - 5, height - 11);
   ctx.beginPath(); ctx.strokeStyle = "#e7bc68"; ctx.lineWidth = 2;
@@ -81,15 +83,12 @@ async function run() {
   try {
     const result = await request("/demo/evaluate", {method: "POST"});
     show(result.test, result.full);
-    $("partition").querySelectorAll("option").forEach((option) => {
-      option.disabled = !result.full && option.value !== "test";
-    });
     $("partition").value = "test";
     $("search").value = "";
     $("gallery").hidden = false;
     await listImages(1);
-    $("csv").hidden = !result.full;
-    status(result.full ? "Evaluación completada en esta sesión. El CSV ya está disponible." : "Prueba completada. Agrega el archivo data/Dataset.zip para procesar el dataset completo.");
+    $("csv").hidden = false;
+    status("Evaluación completada en esta sesión. El CSV ya está disponible.");
   } catch (error) { status(error.message, true); }
   finally { button.disabled = false; }
 }
@@ -146,7 +145,7 @@ window.addEventListener("resize", drawHistory);
     evidence = stored;
     text("health", "Servicio disponible · Modelo " + health.model_version + " · ONNX Runtime CPU");
     text("epoch", stored.model.best_epoch + " / " + stored.model.history.length);
-    text("validation", "72 de 72 en validación");
+    text("validation", number(stored.model.history.find((row) => row.epoch === stored.model.best_epoch).val_accuracy * 100, 2) + " % en validación");
     const ref = stored.benchmark.sin_optimizacion, opt = stored.benchmark.optimizado;
     show({...opt, correct: stored.full.test.correct, images: stored.full.test.images}, stored.full);
     drawBars("latency", [["p50 · base", ref.p50_ms, true], ["p50 · optimizado", opt.p50_ms],
@@ -154,8 +153,8 @@ window.addEventListener("resize", drawHistory);
     drawBars("batches", stored.batches.batch_metrics.map((row) => [row.batch_size + " por lote", row.images_per_second]), 0, "");
     text("history-caption", "40 épocas · Escala logarítmica · Punto verde: época " + stored.model.best_epoch);
     drawHistory();
-    $("run").disabled = false;
-    status(stored.dataset_available ? "Dataset precargado · 7.140 imágenes listas para analizar." : "Conjunto de prueba precargado · 71 imágenes listas para analizar.");
-    if (new URLSearchParams(location.search).has("ejecutar")) await run();
+    $("run").disabled = !stored.dataset_available;
+    status(stored.dataset_available ? "714 originales disponibles para analizar." : "Configura el dataset para ejecutar la evaluación.");
+    if (stored.dataset_available && new URLSearchParams(location.search).has("ejecutar")) await run();
   } catch (error) { status("No se pudo cargar el panel. " + error.message, true); }
 })();

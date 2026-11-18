@@ -1,6 +1,6 @@
 {
-  "platform": "Windows-11-10.0.26300-SP0",
-  "model_sha256": "bcb15d6d8de0a34b030a9fc9ff195424962b0248448d5305feb60444a046184d",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "model_sha256": "0269cdc030412fbc0ca55592c5fd3d91bad56ff01058fefec1a7f4a1ead0b203",
   "images": 71,
   "repeats": 25,
   "identical_predictions": true,
@@ -8,37 +8,37 @@
     {
       "batch_size": 1,
       "full_batch_samples": 1775,
-      "p50_full_batch_ms": 0.6313999999747466,
-      "p95_full_batch_ms": 0.9669899998925756,
-      "images_per_second": 1477.6336217832616
+      "p50_full_batch_ms": 0.6316039999774148,
+      "p95_full_batch_ms": 0.9081496000476362,
+      "images_per_second": 1418.3006069638752
     },
     {
       "batch_size": 2,
       "full_batch_samples": 875,
-      "p50_full_batch_ms": 1.1024000000361411,
-      "p95_full_batch_ms": 1.5392299999575694,
-      "images_per_second": 1711.087955998147
+      "p50_full_batch_ms": 1.1808690000520983,
+      "p95_full_batch_ms": 1.5805093000324173,
+      "images_per_second": 1602.107942973775
     },
     {
       "batch_size": 4,
       "full_batch_samples": 425,
-      "p50_full_batch_ms": 2.0961000000170316,
-      "p95_full_batch_ms": 2.7208999998947547,
-      "images_per_second": 1832.195084290616
+      "p50_full_batch_ms": 2.3055950000525627,
+      "p95_full_batch_ms": 3.077859399957106,
+      "images_per_second": 1604.5834192233492
     },
     {
       "batch_size": 8,
       "full_batch_samples": 200,
-      "p50_full_batch_ms": 4.159450000088327,
-      "p95_full_batch_ms": 6.358339999917449,
-      "images_per_second": 1779.8895345392589
+      "p50_full_batch_ms": 4.58686150000176,
+      "p95_full_batch_ms": 5.525588450018401,
+      "images_per_second": 1698.861419343877
     },
     {
       "batch_size": 16,
       "full_batch_samples": 100,
-      "p50_full_batch_ms": 8.43554999994467,
-      "p95_full_batch_ms": 11.903200000097057,
-      "images_per_second": 1795.4296554209966
+      "p50_full_batch_ms": 9.388685999994095,
+      "p95_full_batch_ms": 11.591662350036813,
+      "images_per_second": 1666.5868238562643
     }
   ]
 }
