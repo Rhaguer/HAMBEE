@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HAMBEE · Evaluación de inferencia</title>
+<link rel="stylesheet" href="/panel/panel.css">
+<script src="/panel/panel.js" defer></script>
+</head>
+<body>
+<header class="top"><a class="brand" href="/">HAMBEE<span> / EVA4</span></a><nav aria-label="Secciones"><a href="#evaluacion">Evaluación</a><a href="#inferencia">Inferencia</a><a href="#rendimiento">Rendimiento</a><a href="/docs" target="_blank" rel="noopener">API</a></nav></header>
+<main>
+<section class="hero" aria-labelledby="title"><div><div id="health" class="health" role="status">Comprobando servicio…</div><h1 id="title">Evaluación de inferencia</h1><p>Analiza las imágenes precargadas para identificar abejas con y sin polen.</p></div><div class="hero-actions"><button id="run" disabled>Analizar dataset</button><a id="csv" class="link-button" href="/demo/predictions.csv" hidden>Descargar predicciones CSV</a></div></section>
+<p class="status" id="status" role="status" aria-live="polite">Cargando evidencia…</p>
+<section aria-labelledby="evaluacion"><h2 id="evaluacion">Evaluación del modelo</h2><div class="stats">
+<article><span>Exactitud de prueba</span><strong id="accuracy">—</strong><small id="test-count">—</small></article>
+<article><span>Imágenes procesadas</span><strong id="image-count">—</strong><small id="full-time">—</small></article>
+<article><span>Capacidad de procesamiento</span><strong id="throughput">—</strong><small>Imágenes/s con lectura y escritura</small></article>
+<article><span>Época seleccionada</span><strong id="epoch">—</strong><small id="validation">—</small></article>
+</div>
+<div class="split">
+<article class="card"><h3>Matriz de confusión</h3><p>71 imágenes reservadas para prueba</p><table class="matrix"><thead><tr><th scope="col">Real / predicha</th><th scope="col">NP</th><th scope="col">P</th></tr></thead><tbody id="matrix"></tbody></table><p id="errors" class="muted"></p></article>
+<article class="card"><h3>Procesamiento por partición</h3><p>Incluye las variantes de entrenamiento</p><dl id="partitions" class="parts"></dl><p class="muted">La exactitud se calcula sobre la partición de prueba.</p></article>
+</div></section>
+<section aria-labelledby="galeria" id="gallery" hidden><h2 id="galeria">Imágenes analizadas</h2>
+<div class="filters"><label for="partition">Partición<select id="partition"><option value="test">Prueba</option><option value="val">Validación</option><option value="train">Entrenamiento</option><option value="all">Dataset completo</option></select></label>
+<label for="search">Buscar por nombre<input id="search" type="search" placeholder="Por ejemplo, P10109"></label></div>
+<div class="gallery-grid" id="images"></div><div class="pages"><button id="prev">Anterior</button><span id="pages" role="status"></span><button id="next">Siguiente</button></div></section>
+<section aria-labelledby="inferencia"><h2 id="inferencia">Imagen externa</h2><details class="card"><summary>Clasificar una imagen propia</summary><div class="uploader">
+<form id="upload"><label for="image">Imagen de una abeja <small>JPEG o PNG · hasta 5 MiB</small></label><input type="file" id="image" accept="image/jpeg,image/png" required><button>Clasificar</button></form>
+<div id="prediction" role="status" aria-live="polite">La predicción mostrará la clase, ambos puntajes y el tiempo de inferencia.</div>
+</div></details></section>
+<section aria-labelledby="rendimiento"><h2 id="rendimiento">Rendimiento y trazabilidad</h2><div class="split">
+<article class="card"><h3>Latencia del modelo</h3><p>Referencia local en CPU, lote unitario</p><div id="latency" class="bars"></div></article>
+<article class="card"><h3>Capacidad por tamaño de lote</h3><p>Referencia sobre tensores precargados</p><div id="batches" class="bars"></div></article>
+</div><article class="card history"><h3>Pérdida de validación</h3><p id="history-caption"></p><canvas id="history" role="img" aria-label="Pérdida de validación por época"></canvas></article></section>
+</main>
+</body></html>

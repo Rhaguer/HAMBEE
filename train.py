@@ -32,7 +32,7 @@ def read_split(root, rows, split):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("dataset", type=Path)
-    parser.add_argument("--epochs", type=int, default=12)
+    parser.add_argument("--epochs", type=int, default=40)
     args = parser.parse_args()
 
     torch.manual_seed(SEED)
@@ -59,8 +59,10 @@ def main():
     optimizer = torch.optim.AdamW(model.parameters(), lr=0.0003)
     loss_fn = nn.CrossEntropyLoss()
     history = []
-    best_score = -1
+    best_key = (-1.0, float("-inf"))
     model_path = ROOT / "models" / "abejas.onnx"
+    history_path = ROOT / "historial.jsonl"
+    history_path.write_text("", encoding="utf-8")
     for epoch in range(args.epochs):
         model.train()
         total_loss = 0.0
@@ -75,12 +77,16 @@ def main():
         with torch.inference_mode():
             predictions = torch.cat([model(batch.to(device)).cpu() for batch in val_x.split(96)])
         score = (predictions.argmax(1) == val_y).float().mean().item()
+        val_loss = loss_fn(predictions, val_y).item()
+        key = (score, -val_loss)
         record = {"epoch": epoch + 1, "train_loss": total_loss / len(train_y),
-                  "val_accuracy": score}
+                  "val_accuracy": score, "val_loss": val_loss}
         history.append(record)
+        with history_path.open("a", encoding="utf-8") as stream:
+            stream.write(json.dumps(record) + "\n")
         print(record, flush=True)
-        if score > best_score:
-            best_score = score
+        if key > best_key:
+            best_key = key
             best_epoch = epoch + 1
             best_state = {name: value.detach().cpu().clone()
                           for name, value in model.state_dict().items()}
@@ -98,7 +104,7 @@ def main():
         native = model(val_x).numpy()
     exported = session.run(None, {"image": val_x.numpy()})[0]
     np.testing.assert_allclose(native, exported, rtol=1e-4, atol=1e-4)
-    metadata = {"model_version": "1.0.0", "seed": SEED, "best_epoch": best_epoch,
+    metadata = {"model_version": "1.1.0", "selection": "max val_accuracy, min val_loss, earliest epoch if equal", "seed": SEED, "best_epoch": best_epoch,
                 "train_device": device, "counts": {s: sum(r["split"] == s for r in rows) for s in groups},
                 "groups": {s: len(g) for s, g in groups.items()}, "history": history,
                 "max_logit_error_validation": float(np.abs(native - exported).max()),

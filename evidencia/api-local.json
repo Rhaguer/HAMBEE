@@ -1,25 +1,87 @@
 {
   "health": {
     "status": "ready",
-    "model_version": "1.0.0",
+    "model_version": "1.1.0",
     "provider": "CPUExecutionProvider"
   },
   "sample": "P10109-127r.jpg",
   "prediction": {
     "label": "P",
-    "confidence": 0.9999767541885376,
+    "confidence": 1.0,
     "probabilities": {
-      "NP": 2.3255839550984092e-05,
-      "P": 0.9999767541885376
+      "NP": 4.1538306128074964e-10,
+      "P": 1.0
     },
-    "model_version": "1.0.0",
-    "inference_ms": 2.1769999999605716
+    "model_version": "1.1.0",
+    "inference_ms": 1.0730000001331064
   },
-  "request_ms": 47.19680000005155,
+  "request_ms": 12.551899999834859,
   "validated_status_codes": [
     200,
     413,
     415,
     422
-  ]
+  ],
+  "panel": {
+    "status": 200,
+    "test": {
+      "images": 71,
+      "correct": 70,
+      "accuracy": 0.9859154929577465,
+      "macro_f1": 0.9859043081199126,
+      "confusion_np_p": [
+        [
+          34,
+          0
+        ],
+        [
+          1,
+          36
+        ]
+      ],
+      "errors": [
+        {
+          "image": "P9995-123r.jpg",
+          "actual": "P",
+          "predicted": "NP"
+        }
+      ],
+      "elapsed_seconds": 0.13768400000003567
+    },
+    "full": {
+      "runtime": "ONNX Runtime 1.31.1 / CPUExecutionProvider",
+      "platform": "Windows-11-10.0.26300-SP0",
+      "model_version": "1.1.0",
+      "model_sha256": "bcb15d6d8de0a34b030a9fc9ff195424962b0248448d5305feb60444a046184d",
+      "dataset_manifest_sha256": "f0a0638953b21429acc27d8065a122885f34d20efd6e283357ddb67a9f97f68c",
+      "processed": 7140,
+      "partitions": {
+        "train": 6997,
+        "test": 71,
+        "val": 72
+      },
+      "batch_size": 8,
+      "full_batches": 892,
+      "p95_full_batch_inference_ms": 5.946759999994811,
+      "model_execution_seconds": 4.541634299999714,
+      "processing_seconds": 11.281335500000068,
+      "processing_images_per_second": 632.9037905130963,
+      "test": {
+        "images": 71,
+        "correct": 70,
+        "accuracy": 0.9859154929577465,
+        "confusion": {
+          "NP": {
+            "NP": 34,
+            "P": 0
+          },
+          "P": {
+            "NP": 1,
+            "P": 36
+          }
+        }
+      }
+    },
+    "csv_rows": 7140
+  }
 }

@@ -2,7 +2,17 @@
 !requirements.txt
 !app.py
 !preprocess.py
+!demostracion.py
+!procesar_dataset.py
 !models/
 !models/abejas.onnx
 !models/metadata.json
+!panel/
+!panel/**
+!validacion/
+!validacion/**
+!evidencia/
+!evidencia/benchmark.json
+!evidencia/lotes-cpu.json
+!evidencia/procesamiento-dataset.json
 

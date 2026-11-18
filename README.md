@@ -1,89 +1,59 @@
 # HAMBEE · EVA4 de Machine Learning
 
-Servicio de inferencia binaria P/NP con MobileNetV3-Small y ONNX Runtime en CPU.
-Consulte el [informe técnico en PDF](docs/EVA4_Informe_Haguer_Maldonado.pdf), el [Word editable](docs/EVA4_Informe_Haguer_Maldonado.docx) y `evidencia/` para los resultados medidos.
+Clasificación P/NP en CPU con MobileNetV3-Small, modelo ONNX **1.1.0** de la **época 37**. El panel ejecuta la prueba reservada y procesa el dataset completo. La API documentada permanece en `/docs`.
 
-Para ejecutar las pruebas y visualizar los resultados en un notebook, siga la [guía de Google Colab](colab/README.md).
+[Descargar entrega completa v1.1.0](https://github.com/Rhaguer/HAMBEE/releases/tag/v1.1.0) · [Informe PDF](docs/EVA4_Informe_Haguer_Maldonado.pdf) · [Guía de Colab](colab/README.md)
 
-## Inicio local
+## Ejecutar en VS Code
 
-Desde la carpeta del proyecto, con Python 3.12:
+1. Descomprime la entrega completa. Abre la carpeta `EVA4` en VS Code.
+2. Selecciona **Python 3.12** con la extensión oficial de Python. Pulsa **F5** y elige **HAMBEE · Ejecutar evaluación completa** si se muestra el selector.
+3. El lanzador prepara las dependencias, abre el panel en el navegador y ejecuta la demostración automáticamente. Al finalizar, el panel habilita la descarga del CSV con 7.140 predicciones.
 
-```powershell
-python -m venv .venv
-.venv/Scripts/python -m pip install -r requirements.txt
-.venv/Scripts/python -m uvicorn app:app --host 127.0.0.1 --port 8000 --limit-concurrency 16
-```
-
-Abra http://127.0.0.1:8000/docs para cargar una imagen en `POST /predict`.
-También puede probar con una muestra original incluida:
+En Windows también puedes hacer doble clic en `Ejecutar HAMBEE.cmd`. La primera instalación requiere acceso a internet. Para abrir el panel manualmente desde una terminal:
 
 ```powershell
-$muestra = (Get-ChildItem validacion/test/P/*.jpg | Select-Object -First 1).FullName
-curl.exe -fsS http://127.0.0.1:8000/health
-curl.exe -fsS -F "file=@$muestra" http://127.0.0.1:8000/predict
+py -3.12 ejecutar.py
 ```
 
-`POST /predict` recibe el campo multipart `file` (JPEG o PNG; hasta 5 MiB de
-archivo y 12 megapíxeles). Devuelve clase, probabilidades, confianza, versión y
-tiempo de ejecución del modelo en milisegundos. La confianza es un puntaje softmax.
-Los códigos 413, 415 y 422 indican, respectivamente, exceso de tamaño, imagen
-inválida y campo obligatorio ausente. Un proxy de producción debería limitar
-también el cuerpo HTTP completo antes de procesar multipart.
+El botón **Analizar dataset** procesa las imágenes precargadas. La galería muestra la etiqueta real y la predicción de cada imagen y permite filtrar por partición o nombre. La carga de una imagen propia es opcional. El ZIP de entrega coloca `Dataset.zip` en `EVA4/data/`. En una copia descargada de Git, coloca el dataset en esa ruta o configura su ubicación mediante la variable `HAMBEE_DATASET`. La prueba de 71 originales está incluida en `validacion/`.
 
 ## Docker
 
-```sh
-docker build -t eva4:1.0.0 .
-docker run --rm -p 127.0.0.1:8000:8000 eva4:1.0.0
+```powershell
+docker build -t hambee:1.1.0 .
+docker run --rm -p 127.0.0.1:8000:8000 hambee:1.1.0
 ```
 
-La imagen usa un usuario sin privilegios y expone una comprobación de salud.
-Se construyó y probó en Docker Engine sobre Debian 12 en una máquina virtual
-local. El contenedor alcanzó el estado `healthy` y superó las pruebas HTTP de
-inferencia y validación. Véase `evidencia/api-docker.json`. La ejecución nativa
-en Windows se documenta en `evidencia/api-local.json`.
-
-GitHub Actions incluye la misma prueba por HTTP y queda disponible al situar
-el contenido de esta carpeta en la raíz
-del repositorio. Una etiqueta `v1.0.0` genera una imagen exportable tras superar
-las verificaciones. Para desplegar esa imagen en otro host, usar `docker load -i
-eva4-image.tar.gz` y ejecutar el comando anterior. Para revertir, conservar y
-volver a ejecutar la imagen de la versión aprobada anterior.
-
-## Validación y reproducción
+Abre `http://127.0.0.1:8000`. Docker incluye el panel y la prueba reservada. Para habilitar el procesamiento de las 7.140 imágenes, monta el archivo del paquete en modo lectura:
 
 ```powershell
-.venv/Scripts/python -m pip install -r requirements-test.txt
-.venv/Scripts/python smoke.py $muestra --url http://127.0.0.1:8000
-.venv/Scripts/python benchmark.py validacion --output benchmark-local.json
-.venv/Scripts/python quality_gate.py benchmark-local.json
+$dataset = (Resolve-Path .\data\Dataset.zip).Path
+docker run --rm -p 127.0.0.1:8000:8000 -e HAMBEE_DATASET=/data/Dataset.zip --mount "type=bind,source=$dataset,target=/data/Dataset.zip,readonly" hambee:1.1.0
 ```
 
-Omita `--url` para ejecutar la prueba contractual sin levantar el servidor.
-Para comparar tamaños de lote sobre la misma muestra, ejecute
-`python benchmark_lotes.py validacion --output lotes-local.json`. El ensayo
-comprueba la paridad de clases y registra el p95 de cada lote completo y la
-tasa de imágenes por segundo sin decodificación, cola ni HTTP. Los resultados
-de referencia se encuentran en `evidencia/lotes-cpu.json`.
+La imagen se ejecuta con un usuario sin privilegios y comprueba la salud de FastAPI. El flujo de CI valida la API, los umbrales de calidad y latencia, los tamaños de lote, y la imagen por HTTP. Los paquetes de versiones etiquetadas pueden descargarse como artefactos del flujo correspondiente.
 
-La carpeta `validacion/` incluye los 71 originales de prueba y su manifiesto,
-obtenidos del RAR de la EVA3. Las métricas evalúan la concordancia con las
-etiquetas heredadas. Para repetir el entrenamiento, extraiga el RAR original
-junto a la carpeta del proyecto e instale las dependencias de entrenamiento en
-un entorno independiente con Python 3.12.
+## Colab
+
+Abre el notebook de la carpeta separada y presiona **▶** en la única celda. Cuando aparezca el selector, carga el ZIP de entrega sin descomprimir. Colab instala las dependencias y genera la prueba de la API, la evaluación, los gráficos y el CSV. El dataset completo viaja dentro del ZIP.
+
+## Evidencia y reproducción
+
+- `models/metadata.json` registra 40 épocas, selección por exactitud y pérdida de validación, y huellas SHA-256.
+- `evidencia/benchmark.json`, `lotes-cpu.json` y `procesamiento-dataset.json` separan latencia de inferencia, capacidad de lote y tiempo total. La exactitud se calcula sobre las 71 imágenes de prueba.
+- `evidencia/api-local.json` y `api-docker.json` describen las pruebas de la versión 1.1.0.
+- `evidencia/comparacion-epocas.json` compara los modelos de las épocas 2 y 37.
+
+Para reproducir las métricas desde una terminal dentro de la carpeta, usando un entorno Python 3.12 con `requirements-test.txt`:
 
 ```powershell
-python -m pip install -r requirements-train.txt
-python train.py ../Dataset_Abejas_10x --epochs 12
+python smoke.py validacion/test/P/P10109-127r.jpg --panel
+python benchmark.py validacion --output benchmark-local.json
+python quality_gate.py benchmark-local.json
+python benchmark_lotes.py validacion --output lotes-local.json
+python procesar_dataset.py data/Dataset.zip --output resultados-dataset
 ```
 
-El entrenamiento verifica los SHA-256 del manifiesto y descarga los pesos
-iniciales de ImageNet desde PyTorch. Conserva la primera época con mejor
-exactitud en validación y genera el ONNX y sus metadatos. La semilla fija reduce
-la variabilidad, con posibles diferencias por hardware o backend. Si se publica
-un nuevo modelo, actualizar su versión en los metadatos, la versión de la API y
-la etiqueta de la imagen. La procedencia del modelo queda registrada mediante
-el SHA-256 del ONNX, el SHA-256 del manifiesto original, las versiones de
-dependencias, la semilla y el historial de entrenamiento.
+Para repetir el ajuste, extrae el dataset original e instala `requirements-train.txt` en un entorno independiente. Ejecuta `train.py <carpeta_dataset> --epochs 40` en una copia de trabajo, ya que vuelve a generar los archivos de `models/`. El uso normal del panel y del notebook reutiliza el modelo exportado.
 

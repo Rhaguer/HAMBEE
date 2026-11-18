@@ -1,6 +1,6 @@
 {
   "platform": "Windows-11-10.0.26300-SP0",
-  "model_sha256": "7899f75a686f1b2d6358dbaa2ec1f54603b8e011f3faf2b12e6411318b404974",
+  "model_sha256": "bcb15d6d8de0a34b030a9fc9ff195424962b0248448d5305feb60444a046184d",
   "images": 71,
   "repeats": 25,
   "identical_predictions": true,
@@ -8,37 +8,37 @@
     {
       "batch_size": 1,
       "full_batch_samples": 1775,
-      "p50_full_batch_ms": 0.641299999642797,
-      "p95_full_batch_ms": 1.123269999879994,
-      "images_per_second": 1442.6870033351524
+      "p50_full_batch_ms": 0.6313999999747466,
+      "p95_full_batch_ms": 0.9669899998925756,
+      "images_per_second": 1477.6336217832616
     },
     {
       "batch_size": 2,
       "full_batch_samples": 875,
-      "p50_full_batch_ms": 1.1520999996719183,
-      "p95_full_batch_ms": 1.7437999999401654,
-      "images_per_second": 1641.806631064767
+      "p50_full_batch_ms": 1.1024000000361411,
+      "p95_full_batch_ms": 1.5392299999575694,
+      "images_per_second": 1711.087955998147
     },
     {
       "batch_size": 4,
       "full_batch_samples": 425,
-      "p50_full_batch_ms": 2.1801000002596993,
-      "p95_full_batch_ms": 3.1363800001599884,
-      "images_per_second": 1722.3979661183168
+      "p50_full_batch_ms": 2.0961000000170316,
+      "p95_full_batch_ms": 2.7208999998947547,
+      "images_per_second": 1832.195084290616
     },
     {
       "batch_size": 8,
       "full_batch_samples": 200,
-      "p50_full_batch_ms": 4.2880500000137545,
-      "p95_full_batch_ms": 6.974944999933541,
-      "images_per_second": 1751.2460979263785
+      "p50_full_batch_ms": 4.159450000088327,
+      "p95_full_batch_ms": 6.358339999917449,
+      "images_per_second": 1779.8895345392589
     },
     {
       "batch_size": 16,
       "full_batch_samples": 100,
-      "p50_full_batch_ms": 8.601100000078077,
-      "p95_full_batch_ms": 13.118469999812984,
-      "images_per_second": 1748.3910615941518
+      "p50_full_batch_ms": 8.43554999994467,
+      "p95_full_batch_ms": 11.903200000097057,
+      "images_per_second": 1795.4296554209966
     }
   ]
 }

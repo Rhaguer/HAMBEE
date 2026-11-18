@@ -1,32 +1,59 @@
 {
   "health": {
     "status": "ready",
-    "model_version": "1.0.0",
+    "model_version": "1.1.0",
     "provider": "CPUExecutionProvider"
   },
   "sample": "P10109-127r.jpg",
   "prediction": {
     "label": "P",
-    "confidence": 0.9999767541885376,
+    "confidence": 1.0,
     "probabilities": {
-      "NP": 2.3256396161741577e-05,
-      "P": 0.9999767541885376
+      "NP": 4.1537670525393366e-10,
+      "P": 1.0
     },
-    "model_version": "1.0.0",
-    "inference_ms": 632.396942000014
+    "model_version": "1.1.0",
+    "inference_ms": 715.1761160000092
   },
-  "request_ms": 1623.512799999844,
+  "request_ms": 1367.1489000000747,
   "validated_status_codes": [
     200,
     413,
     415,
     422
   ],
-  "environment": "Debian 12 amd64 en QEMU (emulación TCG)",
+  "panel": {
+    "test": {
+      "images": 71,
+      "correct": 70,
+      "accuracy": 0.9859154929577465,
+      "macro_f1": 0.9859043081199126,
+      "confusion_np_p": [
+        [
+          34,
+          0
+        ],
+        [
+          1,
+          36
+        ]
+      ],
+      "errors": [
+        {
+          "image": "P9995-123r.jpg",
+          "actual": "P",
+          "predicted": "NP"
+        }
+      ],
+      "elapsed_seconds": 54.10446150300001
+    },
+    "full": null
+  },
+  "environment": "Debian 12 amd64 en QEMU",
   "docker_engine": "20.10.24+dfsg1",
-  "docker_image": "eva4:1.0.0",
-  "docker_image_id": "sha256:8ab394be15a5c6a0db088ade9e0a368315f48f627d79fbb495bc86ca0d065cf4",
-  "docker_image_bytes": 304803642,
+  "docker_image": "eva4:1.1.0",
+  "docker_image_id": "sha256:8c744ddec1796bacb5eb172ff1ac56020626a8614d0f47adc3670fca0c7710fa",
+  "docker_image_bytes": 305877099,
   "docker_container_user": "runner",
   "docker_healthcheck": "healthy"
 }

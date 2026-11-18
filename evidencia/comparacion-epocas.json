@@ -1,0 +1,86 @@
+{
+  "classes": [
+    "NP",
+    "P"
+  ],
+  "current": {
+    "epoch": 2,
+    "sha256": "7899f75a686f1b2d6358dbaa2ec1f54603b8e011f3faf2b12e6411318b404974",
+    "val": {
+      "images": 72,
+      "correct": 72,
+      "accuracy": 1.0,
+      "cross_entropy": 0.010601998833902523,
+      "macro_f1": 1.0,
+      "confusion_np_p": [
+        [
+          35,
+          0
+        ],
+        [
+          0,
+          37
+        ]
+      ]
+    },
+    "test": {
+      "images": 71,
+      "correct": 69,
+      "accuracy": 0.971830985915493,
+      "cross_entropy": 0.09151959646414769,
+      "macro_f1": 0.9718253968253968,
+      "confusion_np_p": [
+        [
+          34,
+          0
+        ],
+        [
+          2,
+          35
+        ]
+      ]
+    }
+  },
+  "candidate": {
+    "epoch": 37,
+    "sha256": "bcb15d6d8de0a34b030a9fc9ff195424962b0248448d5305feb60444a046184d",
+    "val": {
+      "images": 72,
+      "correct": 72,
+      "accuracy": 1.0,
+      "cross_entropy": 0.00035809872709581986,
+      "macro_f1": 1.0,
+      "confusion_np_p": [
+        [
+          35,
+          0
+        ],
+        [
+          0,
+          37
+        ]
+      ]
+    },
+    "test": {
+      "images": 71,
+      "correct": 70,
+      "accuracy": 0.9859154929577465,
+      "cross_entropy": 0.03189863557063507,
+      "macro_f1": 0.9859043081199126,
+      "confusion_np_p": [
+        [
+          34,
+          0
+        ],
+        [
+          1,
+          36
+        ]
+      ]
+    }
+  },
+  "test_disagreements": {
+    "only_current_correct": 0,
+    "only_candidate_correct": 1
+  }
+}

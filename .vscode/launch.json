@@ -1,0 +1,14 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "HAMBEE · Ejecutar evaluación completa",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/ejecutar.py",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "subProcess": false
+    }
+  ]
+}
