@@ -29,8 +29,17 @@ jobs:
       - name: Probar el contenedor por HTTP
         run: |
           docker run -d --name eva4-ci -p 127.0.0.1:8000:8000 eva4:ci
-          curl --retry 15 --retry-delay 2 --retry-connrefused -fsS http://localhost:8000/health
-          python smoke.py "$(find validacion/test/P -name '*.jpg' -print -quit)" --url http://localhost:8000
+          for attempt in {1..30}; do
+            if curl -fs --max-time 2 http://127.0.0.1:8000/health; then
+              break
+            fi
+            if [ "$attempt" -eq 30 ]; then
+              docker logs eva4-ci
+              exit 1
+            fi
+            sleep 2
+          done
+          python smoke.py "$(find validacion/test/P -name '*.jpg' -print -quit)" --url http://127.0.0.1:8000
       - name: Evidencia de CI
         if: always()
         uses: actions/upload-artifact@v4
