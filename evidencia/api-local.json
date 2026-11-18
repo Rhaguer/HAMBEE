@@ -1,0 +1,25 @@
+{
+  "health": {
+    "status": "ready",
+    "model_version": "1.0.0",
+    "provider": "CPUExecutionProvider"
+  },
+  "sample": "P10109-127r.jpg",
+  "prediction": {
+    "label": "P",
+    "confidence": 0.9999767541885376,
+    "probabilities": {
+      "NP": 2.3255839550984092e-05,
+      "P": 0.9999767541885376
+    },
+    "model_version": "1.0.0",
+    "inference_ms": 2.1769999999605716
+  },
+  "request_ms": 47.19680000005155,
+  "validated_status_codes": [
+    200,
+    413,
+    415,
+    422
+  ]
+}

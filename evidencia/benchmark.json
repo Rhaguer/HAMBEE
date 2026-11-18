@@ -1,0 +1,47 @@
+{
+  "platform": "Windows-11-10.0.26300-SP0",
+  "cpu": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+  "ort": "1.31.1",
+  "model_bytes": 6089244,
+  "sin_optimizacion": {
+    "startup_ms": 17.195800000081363,
+    "p50_ms": 2.1785999999792693,
+    "p95_ms": 2.9373300000088425,
+    "samples": 355,
+    "rss_after_mib": 103.8828125,
+    "rss_delta_mib": 13.2265625,
+    "accuracy": 0.971830985915493,
+    "macro_f1": 0.9718253968253968,
+    "confusion_np_p": [
+      [
+        34,
+        0
+      ],
+      [
+        2,
+        35
+      ]
+    ]
+  },
+  "optimizado": {
+    "startup_ms": 21.026500000061787,
+    "p50_ms": 0.6180000000313157,
+    "p95_ms": 0.9877299999743627,
+    "samples": 355,
+    "rss_after_mib": 105.09375,
+    "rss_delta_mib": 14.2578125,
+    "accuracy": 0.971830985915493,
+    "macro_f1": 0.9718253968253968,
+    "confusion_np_p": [
+      [
+        34,
+        0
+      ],
+      [
+        2,
+        35
+      ]
+    ]
+  },
+  "identical_predictions": true
+}

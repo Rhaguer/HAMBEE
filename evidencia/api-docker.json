@@ -1,0 +1,32 @@
+{
+  "health": {
+    "status": "ready",
+    "model_version": "1.0.0",
+    "provider": "CPUExecutionProvider"
+  },
+  "sample": "P10109-127r.jpg",
+  "prediction": {
+    "label": "P",
+    "confidence": 0.9999767541885376,
+    "probabilities": {
+      "NP": 2.3256396161741577e-05,
+      "P": 0.9999767541885376
+    },
+    "model_version": "1.0.0",
+    "inference_ms": 632.396942000014
+  },
+  "request_ms": 1623.512799999844,
+  "validated_status_codes": [
+    200,
+    413,
+    415,
+    422
+  ],
+  "environment": "Debian 12 amd64 en QEMU (emulación TCG)",
+  "docker_engine": "20.10.24+dfsg1",
+  "docker_image": "eva4:1.0.0",
+  "docker_image_id": "sha256:8ab394be15a5c6a0db088ade9e0a368315f48f627d79fbb495bc86ca0d065cf4",
+  "docker_image_bytes": 304803642,
+  "docker_container_user": "runner",
+  "docker_healthcheck": "healthy"
+}
