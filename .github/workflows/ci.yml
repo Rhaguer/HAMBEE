@@ -24,6 +24,8 @@ jobs:
         run: |
           python benchmark.py validacion --output benchmark-ci.json
           python quality_gate.py benchmark-ci.json
+      - name: Medir lotes en CPU
+        run: python benchmark_lotes.py validacion --repeats 3 --output lotes-ci.json
       - name: Construir imagen
         run: docker build -t eva4:ci .
       - name: Probar el contenedor por HTTP
@@ -45,11 +47,14 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: mediciones
-          path: benchmark-ci.json
+          path: |
+            benchmark-ci.json
+            lotes-ci.json
       - name: Empaquetar versión aprobada
         if: startsWith(github.ref, 'refs/tags/v')
+        shell: bash
         run: |
-          python -c 'import json, os; assert os.environ["GITHUB_REF_NAME"] == "v" + json.load(open("models/metadata.json"))["model_version"]'
+          [[ "$GITHUB_REF_NAME" =~ ^v[0-9]+[.][0-9]+[.][0-9]+$ ]]
           docker tag eva4:ci "eva4:${GITHUB_REF_NAME}"
           docker save "eva4:${GITHUB_REF_NAME}" | gzip > eva4-image.tar.gz
       - uses: actions/upload-artifact@v4

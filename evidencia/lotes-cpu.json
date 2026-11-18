@@ -1,0 +1,44 @@
+{
+  "platform": "Windows-11-10.0.26300-SP0",
+  "model_sha256": "7899f75a686f1b2d6358dbaa2ec1f54603b8e011f3faf2b12e6411318b404974",
+  "images": 71,
+  "repeats": 25,
+  "identical_predictions": true,
+  "batch_metrics": [
+    {
+      "batch_size": 1,
+      "full_batch_samples": 1775,
+      "p50_full_batch_ms": 0.641299999642797,
+      "p95_full_batch_ms": 1.123269999879994,
+      "images_per_second": 1442.6870033351524
+    },
+    {
+      "batch_size": 2,
+      "full_batch_samples": 875,
+      "p50_full_batch_ms": 1.1520999996719183,
+      "p95_full_batch_ms": 1.7437999999401654,
+      "images_per_second": 1641.806631064767
+    },
+    {
+      "batch_size": 4,
+      "full_batch_samples": 425,
+      "p50_full_batch_ms": 2.1801000002596993,
+      "p95_full_batch_ms": 3.1363800001599884,
+      "images_per_second": 1722.3979661183168
+    },
+    {
+      "batch_size": 8,
+      "full_batch_samples": 200,
+      "p50_full_batch_ms": 4.2880500000137545,
+      "p95_full_batch_ms": 6.974944999933541,
+      "images_per_second": 1751.2460979263785
+    },
+    {
+      "batch_size": 16,
+      "full_batch_samples": 100,
+      "p50_full_batch_ms": 8.601100000078077,
+      "p95_full_batch_ms": 13.118469999812984,
+      "images_per_second": 1748.3910615941518
+    }
+  ]
+}

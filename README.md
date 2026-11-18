@@ -3,6 +3,8 @@
 Servicio de inferencia binaria P/NP con MobileNetV3-Small y ONNX Runtime en CPU.
 Consulte el [informe técnico en PDF](docs/EVA4_Informe_Haguer_Maldonado.pdf), el [Word editable](docs/EVA4_Informe_Haguer_Maldonado.docx) y `evidencia/` para los resultados medidos.
 
+Para ejecutar las pruebas y visualizar los resultados en un notebook, siga la [guía de Google Colab](colab/README.md).
+
 ## Inicio local
 
 Desde la carpeta del proyecto, con Python 3.12:
@@ -59,6 +61,12 @@ volver a ejecutar la imagen de la versión aprobada anterior.
 ```
 
 Omita `--url` para ejecutar la prueba contractual sin levantar el servidor.
+Para comparar tamaños de lote sobre la misma muestra, ejecute
+`python benchmark_lotes.py validacion --output lotes-local.json`. El ensayo
+comprueba la paridad de clases y registra el p95 de cada lote completo y la
+tasa de imágenes por segundo sin decodificación, cola ni HTTP. Los resultados
+de referencia se encuentran en `evidencia/lotes-cpu.json`.
+
 La carpeta `validacion/` incluye los 71 originales de prueba y su manifiesto,
 obtenidos del RAR de la EVA3. Las métricas evalúan la concordancia con las
 etiquetas heredadas. Para repetir el entrenamiento, extraiga el RAR original
