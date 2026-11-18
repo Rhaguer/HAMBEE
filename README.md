@@ -1,5 +1,7 @@
 # HAMBEE EVA4
 
+Repositorio de entrega: https://github.com/Rhaguer/HAMBEE. El informe vigente se encuentra en `docs/EVA4_Informe_Haguer_Maldonado.pdf`; la guía de defensa y la matriz de la pauta están en `docs/DEFENSA_EVA4.md`.
+
 Clasificador de abejas con polen (P) y sin polen (NP), MobileNetV3-Small v1.2.0, época 33 de 40. El ZIP de datos tiene 714 JPEG originales y su manifiesto. Las particiones por grupo de origen tienen 571 imágenes de entrenamiento, 72 de validación y 71 de prueba.
 
 ## Demostración local
@@ -72,3 +74,20 @@ git push origin v1.2.0
 ```
 
 El workflow valida integridad, API, paridad, F1 macro ≥ 0,94 y p95 ONNX ≤ 25 ms. La ejecución del tag empaqueta la imagen con SHA-256. Un segundo job descarga el artefacto, comprueba su huella, carga la imagen y prueba el despliegue en un runner independiente. Los artefactos se llaman `evidencia-eva4`, `eva4-image` y `evidencia-despliegue-eva4`. Para revertir, conserva la imagen anterior, verifica su huella y vuelve a desplegarla.
+
+### Registro MLOps con MLflow
+
+El job de validación ejecuta `registrar_mlflow.py` después de aprobar Docker. Registra el modelo ONNX, el manifiesto de las 714 imágenes, parámetros, huellas, commit, métricas de calidad, RAM y latencia, y los JSON de pruebas. Importa las curvas históricas identificándolas como historial previo; no presenta esa importación como un nuevo entrenamiento. El registro se lee nuevamente para comprobar su persistencia y se conserva en el artefacto `evidencia-mlops`.
+
+Para registrar una validación propia que haya generado `benchmark-ci.json` y `api-docker-ci.json` en la raíz del proyecto:
+
+```bash
+python -m pip install -r requirements-mlops.txt
+python registrar_mlflow.py --salida resultados-mlops
+```
+
+El JSON `registro-mlflow.json` permite revisar el identificador y las métricas sin ejecutar un servidor. Para inspeccionar la base SQLite descargada mediante MLflow, usa `mlflow ui --backend-store-uri sqlite:///RUTA_ABSOLUTA/mlflow.db`. Las ubicaciones originales de los artefactos corresponden al runner; los archivos se conservan también dentro del ZIP del artefacto `evidencia-mlops`.
+
+### Alcance del despliegue
+
+La liberación automatizada se despliega y prueba en un runner Linux independiente. Es un entorno de aceptación efímero: finaliza al terminar el job. Para una demostración persistente en el equipo de defensa, ejecuta el lanzador local o `docker run`. No se requiere una nube pública para esta evaluación.
